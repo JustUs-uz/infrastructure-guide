@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Работа с кодом | Руководство для разработчика</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="preparation.html">Подготовка среды разработки</a></li>
+            <li class="breadcrumb-item active">Работа с кодом</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-code"></i> Работа с кодом</h1>
+        <p><strong>Роль:</strong> Разработчик</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Главный шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Клонирование репозитория
+                проекта</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>В этом шаге мы клонируем репозиторий проекта с GitHub на вашу локальную машину для дальнейшей работы.
+                </p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Установленный Git.</li>
+                    <li>Настроенный аккаунт на GitHub.</li>
+                    <li>Репозиторий проекта создан на GitHub (см. предыдущий шаг).</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Git (если не
+                        установлен)</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите на официальный сайт Git: <a href="https://git-scm.com/download/win"
+                                    target="_blank">https://git-scm.com/download/win</a></li>
+                            <li>Скачайте установщик для Windows и запустите его.</li>
+                            <li>Следуйте инструкциям установщика, оставив настройки по умолчанию.</li>
+                            <li>После установки перезагрузите командную строку, если она была открыта.</li>
+                            <li>Проверьте установку Git, выполнив команду:</li>
+                            <div class="code-block">
+                                <pre>
+git --version
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Клонирование репозитория</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте командную строку или PowerShell.</li>
+                            <li>Перейдите в директорию, где вы хотите разместить проект:</li>
+                            <div class="code-block">
+                                <pre>
+cd C:\Users\ВашеИмяПользователя\Projects
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Клонируйте репозиторий проекта:</li>
+                            <div class="code-block">
+                                <pre>
+git clone https://github.com/yourusername/{{PROJECT_NAME}}.git
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Замените <code>yourusername</code> на ваше имя пользователя на GitHub, а
+                                <code>{{PROJECT_NAME}}</code> на название вашего проекта.
+                            </p>
+                            <li>Перейдите в директорию проекта:</li>
+                            <div class="code-block">
+                                <pre>
+cd {{PROJECT_NAME}}
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка успешного клонирования</h3>
+                <ul>
+                    <li>Репозиторий проекта склонирован на вашу локальную машину.</li>
+                    <li>Вы находитесь в директории проекта.</li>
+                    <li>Файлы проекта видны в файловом менеджере или через команду <code>dir</code>.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://git-scm.com/doc" target="_blank">Документация Git</a></li>
+                    <li><a href="https://docs.github.com/en/get-started" target="_blank">Руководство по началу работы с
+                            GitHub</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Установка зависимостей проекта</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Установим все необходимые пакеты и зависимости для запуска проекта.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Находитесь в директории проекта.</li>
+                    <li>Установлены Node.js и npm.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка зависимостей через
+                        npm</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Убедитесь, что файл <code>package.json</code> существует в корне проекта.</li>
+                            <li>Выполните команду для установки зависимостей:</li>
+                            <div class="code-block">
+                                <pre>
+npm install
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Эта команда установит все пакеты, перечисленные в секциях <code>dependencies</code> и
+                                <code>devDependencies</code> файла <code>package.json</code>.
+                            </p>
+                        </ol>
+
+                        <h4>Объяснение файла package.json</h4>
+                        <p>Файл <code>package.json</code> содержит информацию о вашем проекте и списке зависимостей.
+                            Пример:</p>
+                        <div class="code-block">
+                            <pre>
+{
+  "name": "{{PROJECT_NAME}}",
+  "version": "1.0.0",
+  "description": "Описание вашего проекта",
+  "main": "dist/server/index.js",
+  "scripts": {
+    "start": "node dist/server/index.js",
+    "build": "gulp build",
+    "dev": "gulp"
+  },
+  "author": "Ваше имя",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.13.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/mongoose": "^5.11.97",
+    "gulp": "^4.0.2",
+    "gulp-pug": "^4.0.1",
+    "gulp-sass": "^5.0.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "sass": "^1.32.13",
+    "typescript": "^4.5.4",
+    "del": "^6.0.0",
+    "browser-sync": "^2.26.14",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-uglify": "^3.0.2"
+  }
+}
+                            </pre>
+                            <button class="copy-button" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                        </div>
+                        <p><strong>Объяснение:</strong></p>
+                        <ul>
+                            <li><code>dependencies</code>: Пакеты, необходимые для работы приложения в продакшене.</li>
+                            <li><code>devDependencies</code>: Пакеты, необходимые для разработки (инструменты сборки,
+                                типизация и т.д.).</li>
+                            <li><code>scripts</code>: Сценарии для автоматизации задач (сборка, запуск сервера и т.д.).
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка установки зависимостей</h3>
+                <ul>
+                    <li>В директории проекта появилась папка <code>node_modules</code>.</li>
+                    <li>Команда <code>npm install</code> выполнилась без ошибок.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Настройка и использование Pug, Sass и
+                Gulp</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>В этом шаге мы настроим и интегрируем <strong>Pug</strong>, <strong>Sass</strong> и
+                    <strong>Gulp</strong> в наш проект для улучшения процесса разработки и автоматизации задач.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Настройка Pug -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Подшаг 1: Настройка и
+                        использование Pug</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите Pug и плагин для Gulp:</li>
+                            <div class="code-block">
+                                <pre>
+npm install --save-dev pug gulp-pug
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте директорию для шаблонов Pug:</li>
+                            <div class="code-block">
+                                <pre>
+mkdir src/client/views
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте базовый шаблон <code>src/client/views/index.pug</code>:</li>
+                            <div class="code-block">
+                                <pre>
+doctype html
+html(lang="ru")
+  head
+    meta(charset="UTF-8")
+    title Мой проект
+    link(rel="stylesheet", href="css/main.css")
+  body
+    h1 Здравствуйте, мир!
+    p Это мой первый шаблон Pug.
+    script(src="js/app.js")
+                                </pre>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Настройка Sass -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Подшаг 2: Настройка и
+                        использование Sass</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите Sass и плагин для Gulp:</li>
+                            <div class="code-block">
+                                <pre>
+npm install --save-dev sass gulp-sass
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте директорию для файлов Sass:</li>
+                            <div class="code-block">
+                                <pre>
+mkdir src/client/styles
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте файл <code>src/client/styles/main.scss</code> с базовыми стилями:</li>
+                            <div class="code-block">
+                                <pre>
+$primary-color: #3498db;
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ecf0f1;
+}
+
+h1 {
+  color: $primary-color;
+}
+                                </pre>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 3: Настройка Gulp -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Подшаг 3: Автоматизация задач с
+                        помощью Gulp</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите Gulp глобально и в проекте:</li>
+                            <div class="code-block">
+                                <pre>
+npm install --global gulp-cli
+npm install --save-dev gulp
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Установите BrowserSync для автоматического обновления браузера:</li>
+                            <div class="code-block">
+                                <pre>
+npm install --save-dev browser-sync
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте или отредактируйте файл <code>gulpfile.js</code> и добавьте следующие задачи:
+                            </li>
+                            <div class="code-block">
+                                <pre>
+// Импорт необходимых модулей
+const gulp = require('gulp');
+const pug = require('gulp-pug');
+const sass = require('gulp-sass')(require('sass'));
+const ts = require('gulp-typescript');
+const tsProject = ts.createProject('tsconfig.json');
+const browserSync = require('browser-sync').create();
+const del = require('del');
+
+// Очистка папки dist
+function clean() {
+  return del(['dist']);
+}
+
+// Компиляция Pug
+function compilePug() {
+  return gulp.src('src/client/views/**/*.pug')
+    .pipe(pug())
+    .pipe(gulp.dest('dist/public'))
+    .pipe(browserSync.stream());
+}
+
+// Компиляция Sass
+function compileSass() {
+  return gulp.src('src/client/styles/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('dist/public/css'))
+    .pipe(browserSync.stream());
+}
+
+// Компиляция клиентского TypeScript
+function compileClientTs() {
+  return gulp.src('src/client/**/*.ts')
+    .pipe(tsProject())
+    .pipe(gulp.dest('dist/public/js'))
+    .pipe(browserSync.stream());
+}
+
+// Компиляция серверного TypeScript
+function compileServerTs() {
+  return gulp.src('src/server/**/*.ts')
+    .pipe(tsProject())
+    .pipe(gulp.dest('dist'))
+    .pipe(browserSync.stream());
+}
+
+// Копирование статических файлов
+function copyAssets() {
+  return gulp.src('public/**/*')
+    .pipe(gulp.dest('dist/public'))
+    .pipe(browserSync.stream());
+}
+
+// Запуск сервера BrowserSync
+function serve() {
+  browserSync.init({
+    server: {
+      baseDir: 'dist/public'
+    }
+  });
+
+  gulp.watch('src/client/views/**/*.pug', compilePug);
+  gulp.watch('src/client/styles/**/*.scss', compileSass);
+  gulp.watch('src/client/**/*.ts', compileClientTs);
+  gulp.watch('src/server/**/*.ts', compileServerTs);
+  gulp.watch('public/**/*', copyAssets);
+}
+
+// Задача по умолчанию
+exports.default = gulp.series(
+  clean,
+  gulp.parallel(compilePug, compileSass, compileClientTs, compileServerTs, copyAssets),
+  serve
+);
+
+// Задача для сборки без запуска сервера
+exports.build = gulp.series(
+  clean,
+  gulp.parallel(compilePug, compileSass, compileClientTs, compileServerTs, copyAssets)
+);
+                                </pre>
+                            </div>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка настройки Pug, Sass и Gulp</h3>
+                <ul>
+                    <li>Pug установлен и настроен в проекте.</li>
+                    <li>Sass установлен и настроен в проекте.</li>
+                    <li>Gulp настроен для автоматизации задач компиляции и запуска сервера.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://pugjs.org/api/getting-started.html" target="_blank">Документация Pug</a></li>
+                    <li><a href="https://sass-lang.com/guide" target="_blank">Руководство по Sass</a></li>
+                    <li><a href="https://gulpjs.com/docs/en/getting-started/quick-start" target="_blank">Руководство по
+                            Gulp</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Настройка конфигурационных
+                файлов</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>В этом шаге мы настроим конфигурационные файлы проекта: <code>tsconfig.json</code> и
+                    <code>gulpfile.js</code>.
+                </p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Установлены все зависимости проекта.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Настройка tsconfig.json -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка tsconfig.json</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>tsconfig.json</code> в корне проекта, если он не был создан ранее.
+                            </li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p><strong>Объяснение:</strong></p>
+                            <ul>
+                                <li><code>"outDir": "./dist"</code>: Папка для скомпилированных файлов.</li>
+                                <li><code>"rootDir": "./src"</code>: Папка с исходными файлами TypeScript.</li>
+                                <li><code>"include": ["src/**/*"]</code>: Компилировать все файлы внутри
+                                    <code>src</code>.
+                                </li>
+                            </ul>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Настройка gulpfile.js -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка gulpfile.js</button>
+                    <div class="sub-panel">
+                        <p>Настроим Gulp для автоматической компиляции Pug, Sass и TypeScript, а также для копирования
+                            статических файлов.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>gulpfile.js</code> в корне проекта.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+// Импортируем необходимые модули
+const { src, dest, watch, series } = require('gulp');
+const pug = require('gulp-pug');
+const sass = require('gulp-sass')(require('sass'));
+const ts = require('gulp-typescript');
+const tsProject = ts.createProject('tsconfig.json');
+const del = require('del');
+
+// Очистка папки dist перед сборкой
+function cleanDist() {
+  return del(['dist/**', '!dist']);
+}
+
+// Компиляция Pug в HTML
+function compilePug() {
+  return src('src/client/**/*.pug')
+    .pipe(pug())
+    .pipe(dest('dist/public'));
+}
+
+// Компиляция Sass в CSS
+function compileSass() {
+  return src('src/client/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(dest('dist/public/css'));
+}
+
+// Компиляция TypeScript (клиентская часть)
+function compileClientTS() {
+  return src('src/client/**/*.ts')
+    .pipe(tsProject())
+    .pipe(dest('dist/public/js'));
+}
+
+// Компиляция TypeScript (серверная часть)
+function compileServerTS() {
+  return src('src/server/**/*.ts')
+    .pipe(tsProject())
+    .pipe(dest('dist'));
+}
+
+// Копирование статических файлов
+function copyAssets() {
+  return src('public/**/*')
+    .pipe(dest('dist/public'));
+}
+
+// Наблюдение за изменениями
+function watchFiles() {
+  watch('src/client/**/*.pug', compilePug);
+  watch('src/client/**/*.scss', compileSass);
+  watch('src/client/**/*.ts', compileClientTS);
+  watch('src/server/**/*.ts', compileServerTS);
+  watch('public/**/*', copyAssets);
+}
+
+// Экспорт задач
+exports.default = series(
+  cleanDist,
+  compilePug,
+  compileSass,
+  compileClientTS,
+  compileServerTS,
+  copyAssets,
+  watchFiles
+);
+
+exports.build = series(
+  cleanDist,
+  compilePug,
+  compileSass,
+  compileClientTS,
+  compileServerTS,
+  copyAssets
+);
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <p><strong>Объяснение:</strong></p>
+                            <ul>
+                                <li><code>cleanDist</code>: Очищает папку <code>dist</code> перед сборкой.</li>
+                                <li><code>compilePug</code>, <code>compileSass</code>, <code>compileClientTS</code>,
+                                    <code>compileServerTS</code>: Компилируют соответствующие файлы.
+                                </li>
+                                <li><code>copyAssets</code>: Копирует статические файлы из папки <code>public</code> в
+                                    <code>dist/public</code>.
+                                </li>
+                                <li><code>watchFiles</code>: Следит за изменениями в файлах и запускает соответствующие
+                                    задачи.</li>
+                                <li><code>exports.default</code>: Задача по умолчанию для разработки.</li>
+                                <li><code>exports.build</code>: Задача для сборки проекта без наблюдения.</li>
+                            </ul>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка конфигурации</h3>
+                <ul>
+                    <li>Файл <code>tsconfig.json</code> настроен правильно.</li>
+                    <li>Файл <code>gulpfile.js</code> содержит все необходимые задачи.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://www.typescriptlang.org/docs/" target="_blank">Документация TypeScript</a></li>
+                    <li><a href="https://gulpjs.com/docs/en/getting-started/quick-start" target="_blank">Руководство по
+                            Gulp</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 5 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 5: Создание структуры проекта</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Создадим структуру проекта согласно предоставленной вами схеме.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Настроены конфигурационные файлы.</li>
+                    <li>Находитесь в корневой директории проекта.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Создание директорий -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание директорий
+                        проекта</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Выполните следующие команды для создания директорий:</li>
+                            <div class="code-block">
+                                <pre>
+mkdir docker
+mkdir kubernetes
+mkdir src
+mkdir src/client
+mkdir src/server
+mkdir src/server/routes
+mkdir src/server/models
+mkdir public
+mkdir public/css
+mkdir public/js
+mkdir public/images
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p><strong>Пояснение:</strong> Эти команды создадут необходимую структуру директорий для
+                                вашего проекта.</p>
+                        </ol>
+
+                        <h4>Структура проекта</h4>
+                        <div class="code-block">
+                            <pre>
+{{PROJECT_NAME}}/
+├── docker/
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+├── kubernetes/
+│   ├── deployment.yaml
+│   ├── service.yaml
+├── src/
+│   ├── client/
+│   │   ├── index.pug
+│   │   ├── styles.scss
+│   │   ├── app.ts
+│   ├── server/
+│   │   ├── index.ts
+│   │   ├── routes/
+│   │   │   └── graphRoutes.ts
+│   │   ├── models/
+│   │   │   └── graph.ts
+├── public/
+│   ├── css/
+│   ├── js/
+│   ├── images/
+├── .gitignore
+├── package.json
+├── gulpfile.js
+├── tsconfig.json
+├── README.md
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка структуры проекта</h3>
+                <ul>
+                    <li>Все необходимые директории созданы.</li>
+                    <li>Структура проекта соответствует заданной схеме.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 6 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 6: Создание и настройка файлов
+                проекта</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Создадим и настроим файлы для клиентской и серверной части проекта.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Клиентская часть -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка клиентской
+                        части</button>
+                    <div class="sub-panel">
+                        <h4>1. Создание файла index.pug</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>src/client/index.pug</code>.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    title Мое приложение
+    link(rel="stylesheet", href="css/styles.css")
+  body
+    h1 Мое приложение
+    p Добро пожаловать!
+    script(src="js/app.js")
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>2. Создание файла styles.scss</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>src/client/styles.scss</code>.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+$primary-color: #3498db;
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ecf0f1;
+}
+
+h1 {
+  color: $primary-color;
+}
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>3. Создание файла app.ts</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>src/client/app.ts</code>.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+console.log('Клиентский скрипт запущен');
+
+async function fetchGraphs() {
+  const response = await fetch('/api/graphs');
+  const data = await response.json();
+  console.log('Графы:', data);
+}
+
+fetchGraphs();
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Серверная часть -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка серверной
+                        части</button>
+                    <div class="sub-panel">
+                        <h4>1. Создание файла index.ts</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>src/server/index.ts</code>.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+import express from 'express';
+import path from 'path';
+import graphRoutes from './routes/graphRoutes';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Настройка статической папки
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Маршруты
+app.use('/api/graphs', graphRoutes);
+
+// Запуск сервера
+app.listen(PORT, () => {
+  console.log(`Сервер запущен на порту ${PORT}`);
+});
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>2. Создание файла graphRoutes.ts</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>src/server/routes/graphRoutes.ts</code>.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+import { Router } from 'express';
+import { getGraphs, createGraph } from '../controllers/graphController';
+
+const router = Router();
+
+router.get('/', getGraphs);
+router.post('/', createGraph);
+
+export default router;
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>3. Создание файла graphController.ts</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>src/server/controllers/graphController.ts</code> (папку
+                                <code>controllers</code> необходимо создать).
+                            </li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+import { Request, Response } from 'express';
+
+export const getGraphs = (req: Request, res: Response) => {
+  res.json({ message: 'Получение графов' });
+};
+
+export const createGraph = (req: Request, res: Response) => {
+  res.json({ message: 'Создание графа' });
+};
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>4. Создание файла graph.ts</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>src/server/models/graph.ts</code>.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+import { Schema, model } from 'mongoose';
+
+const graphSchema = new Schema({
+  name: { type: String, required: true },
+  data: { type: Object, required: true }
+});
+
+export default model('Graph', graphSchema);
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка файлов проекта</h3>
+                <ul>
+                    <li>Все файлы созданы и содержат корректный код.</li>
+                    <li>Структура проекта соответствует заданной схеме.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 7 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 7: Сборка и запуск проекта</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Соберём проект с помощью Gulp и запустим сервер для проверки работы приложения.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Сборка проекта -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Сборка проекта</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Выполните команду для сборки проекта:</li>
+                            <div class="code-block">
+                                <pre>
+npm run build
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Эта команда запустит задачу <code>build</code> из файла <code>gulpfile.js</code>.</p>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Запуск сервера -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Запуск сервера</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Запустите сервер командой:</li>
+                            <div class="code-block">
+                                <pre>
+npm start
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Откройте браузер и перейдите по адресу <a href="http://localhost:3000"
+                                    target="_blank">http://localhost:3000</a>.</li>
+                            <li>Убедитесь, что страница отображается корректно, а в консоли выводятся соответствующие
+                                сообщения.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка работы приложения</h3>
+                <ul>
+                    <li>Проект собирается без ошибок.</li>
+                    <li>Сервер запускается и доступен по адресу <code>http://localhost:3000</code>.</li>
+                    <li>Клиентская часть функционирует, сообщения выводятся в консоль браузера.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 8 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 8: Коммит и пуш изменений на
+                GitHub</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Сохраним внесённые изменения в системе контроля версий Git и отправим их на GitHub.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Коммит изменений -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Коммит изменений</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Добавьте все изменения в индекс Git:</li>
+                            <div class="code-block">
+                                <pre>
+git add .
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Сделайте коммит с сообщением:</li>
+                            <div class="code-block">
+                                <pre>
+git commit -m "Completed initial project setup and development"
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Отправка на GitHub -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Отправка изменений на
+                        GitHub</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Отправьте изменения в удалённый репозиторий:</li>
+                            <div class="code-block">
+                                <pre>
+git push origin main
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Убедитесь, что изменения появились на GitHub, открыв репозиторий в браузере.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка коммита и пуша</h3>
+                <ul>
+                    <li>Все изменения сохранены в локальном репозитории Git.</li>
+                    <li>Изменения успешно отправлены на GitHub.</li>
+                </ul>
+            </div>
+
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../devops/containerization.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../devops/kubernetes_setup.html" class="button">Следующий шаг руководства: DevOps: Настройка
+                Kubernetes <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="preparation.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему
+                шагу по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="ci_cd.html" class="button">Следующий шаг по роли: CI/CD для разработчиков <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

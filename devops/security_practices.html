@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Практики безопасности | Руководство по DevOps</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item"><a href="infrastructure.html">Подготовка инфраструктуры</a></li>
+            <li class="breadcrumb-item"><a href="containerization.html">Контейнеризация приложений</a></li>
+            <li class="breadcrumb-item"><a href="kubernetes_setup.html">Настройка Kubernetes</a></li>
+            <li class="breadcrumb-item"><a href="traefik_configuration.html">Настройка Traefik в Kubernetes</a></li>
+            <li class="breadcrumb-item"><a href="ci_cd_pipeline.html">Настройка CI/CD пайплайна</a></li>
+            <li class="breadcrumb-item"><a href="monitoring_logging.html">Мониторинг и логирование</a></li>
+            <li class="breadcrumb-item active">Практики безопасности</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-shield-alt"></i> Практики безопасности</h1>
+        <p><strong>Роль:</strong> DevOps</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Главный шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Безопасность Docker-образов</button>
+            <div class="panel">
+                <p><strong>Описание</strong></p>
+                <p>Обеспечение безопасности Docker-образов является ключевым аспектом в DevOps. В этом шаге мы
+                    рассмотрим лучшие практики по созданию безопасных Docker-образов.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Использование минимальных базовых
+                        образов</button>
+                    <div class="sub-panel">
+                        <p><strong>Рекомендация:</strong> Используйте минимальные базовые образы, такие как
+                            <code>alpine</code> или <code>scratch</code>, чтобы уменьшить поверхность атаки.
+                        </p>
+
+                        <p><strong>Пример:</strong></p>
+                        <div class="code-block">
+                            <pre>
+FROM alpine:3.14
+
+RUN apk add --no-cache python3 py3-pip
+
+COPY . /app
+
+WORKDIR /app
+
+RUN pip install -r requirements.txt
+
+CMD ["python3", "app.py"]
+                            </pre>
+                            <button class="copy-button" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                        </div>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>alpine:3.14</code>: Лёгкий образ на базе Alpine Linux.</li>
+                            <li>Минимизирует размер образа и количество потенциальных уязвимостей.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Сканирование образов на
+                        уязвимости</button>
+                    <div class="sub-panel">
+                        <p><strong>Рекомендация:</strong> Регулярно сканируйте Docker-образы на наличие известных
+                            уязвимостей с помощью инструментов, таких как <code>Trivy</code>, <code>Clair</code> или
+                            встроенных функций в Docker Hub.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите Trivy:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg install -y trivy
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Сканируйте образ:</li>
+                            <div class="code-block">
+                                <pre>
+trivy image your_docker_image
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Просмотрите отчёт и устраните обнаруженные уязвимости.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Использование непривилегированных
+                        пользователей</button>
+                    <div class="sub-panel">
+                        <p><strong>Рекомендация:</strong> Не запускайте приложения от имени пользователя
+                            <code>root</code> внутри контейнера. Создайте непривилегированного пользователя и
+                            переключитесь на него.
+                        </p>
+
+                        <p><strong>Пример:</strong></p>
+                        <div class="code-block">
+                            <pre>
+FROM alpine:3.14
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+USER appuser
+
+COPY --chown=appuser:appgroup . /app
+
+WORKDIR /app
+
+CMD ["./your_app"]
+                            </pre>
+                            <button class="copy-button" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                        </div>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>adduser</code>: Создаёт нового пользователя.</li>
+                            <li><code>USER appuser</code>: Переключается на непривилегированного пользователя.</li>
+                            <li><code>--chown=appuser:appgroup</code>: Устанавливает владельца файлов.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/"
+                            target="_blank">Лучшие практики написания Dockerfile</a></li>
+                    <li><a href="https://github.com/aquasecurity/trivy" target="_blank">Trivy — сканер безопасности</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Безопасность
+                Kubernetes-кластера</button>
+            <div class="panel">
+                <p><strong>Описание</strong></p>
+                <p>Обеспечение безопасности Kubernetes-кластера включает в себя настройку контроля доступа, сети и
+                    политики безопасности подов.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка Role-Based Access
+                        Control (RBAC)</button>
+                    <div class="sub-panel">
+                        <p><strong>Рекомендация:</strong> Используйте RBAC для ограничения прав доступа пользователей и
+                            сервисов в кластере.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте роль с минимальными необходимыми правами, например, для чтения подов:</li>
+                            <div class="code-block">
+                                <pre>
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+                                </pre>
+                            </div>
+                            <li>Создайте привязку роли к пользователю или сервисному аккаунту:</li>
+                            <div class="code-block">
+                                <pre>
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+- kind: User
+  name: your-username
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+                                </pre>
+                            </div>
+                            <li>Примените манифесты:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl apply -f role.yaml
+kubectl apply -f rolebinding.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>Role</code>: Определяет набор прав в определённом пространстве имён.</li>
+                            <li><code>RoleBinding</code>: Связывает роль с пользователем или группой.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Использование Network
+                        Policies</button>
+                    <div class="sub-panel">
+                        <p><strong>Рекомендация:</strong> Используйте политики сети для ограничения трафика между подами
+                            и службами.</p>
+
+                        <p><strong>Пример:</strong> Разрешить трафик только от определённых подов к вашему приложению.
+                        </p>
+
+                        <div class="code-block">
+                            <pre>
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-specific
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: myapp
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: allowed-app
+    ports:
+    - protocol: TCP
+      port: 80
+                            </pre>
+                        </div>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>NetworkPolicy</code>: Определяет правила входящего и исходящего трафика для подов.
+                            </li>
+                            <li><code>podSelector</code>: Указывает, к каким подам применяется политика.</li>
+                            <li><code>ingress</code>: Определяет правила входящего трафика.</li>
+                        </ul>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Примените манифест политики сети:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl apply -f networkpolicy.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте, что политика применяется и трафик ограничен согласно правилам.</li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Для работы Network
+                                Policies требуется сетевой плагин (CNI), поддерживающий их, например, Calico или Weave
+                                Net.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Использование Pod Security
+                        Policies (PSP)</button>
+                    <div class="sub-panel">
+                        <p><strong>Рекомендация:</strong> Ограничьте права подов, используя политики безопасности подов.
+                        </p>
+
+                        <p><strong>Пример:</strong> Запретить запуск подов с привилегиями.</p>
+
+                        <div class="code-block">
+                            <pre>
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: restricted
+spec:
+  privileged: false
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+    - min: 1
+      max: 65535
+  runAsUser:
+    rule: 'MustRunAsNonRoot'
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+    - min: 1
+      max: 65535
+  volumes:
+  - 'configMap'
+  - 'emptyDir'
+  - 'secret'
+                            </pre>
+                        </div>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>PodSecurityPolicy</code>: Определяет разрешённые настройки безопасности для подов.
+                            </li>
+                            <li><code>privileged: false</code>: Запрещает привилегированные контейнеры.</li>
+                            <li><code>runAsUser</code>: Требует запуск контейнеров от имени непривилегированного
+                                пользователя.</li>
+                        </ul>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Примените политику безопасности подов:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl apply -f psp.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Настройте RBAC для использования PSP с соответствующими ролями и привязками ролей.</li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-info-circle"></i> Примечание:</strong> Начиная с Kubernetes
+                                1.21, PodSecurityPolicy устарел и заменяется на Pod Security Admission Controller.
+                                Изучите новые подходы к обеспечению безопасности подов.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/" target="_blank">RBAC в
+                            Kubernetes</a></li>
+                    <li><a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/"
+                            target="_blank">Network Policies</a></li>
+                    <li><a href="https://kubernetes.io/docs/concepts/security/pod-security-standards/"
+                            target="_blank">Pod Security Standards</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Безопасность CI/CD пайплайна</button>
+            <div class="panel">
+                <p><strong>Описание</strong></p>
+                <p>Обеспечение безопасности в процессе непрерывной интеграции и доставки (CI/CD) важно для
+                    предотвращения внедрения уязвимостей в ваш код и инфраструктуру.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Безопасное хранение
+                        секретов</button>
+                    <div class="sub-panel">
+                        <p><strong>Рекомендация:</strong> Не храните секреты (пароли, ключи API) в репозиториях кода или
+                            в явном виде в пайплайнах. Используйте менеджеры секретов.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Используйте встроенные возможности Jenkins для безопасного хранения секретов
+                                (Credentials).</li>
+                            <li>Интегрируйте внешние менеджеры секретов, такие как Vault от HashiCorp.</li>
+                            <li>В пайплайне используйте привязку учётных данных:</li>
+                            <div class="code-block">
+                                <pre>
+pipeline {
+    agent any
+
+    stages {
+        stage('Example') {
+            steps {
+                withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKERHUB_PASSWORD')]) {
+                    // Используйте переменную $DOCKERHUB_PASSWORD
+                }
+            }
+        }
+    }
+}
+                                </pre>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Ограничение прав доступа к
+                        Jenkins</button>
+                    <div class="sub-panel">
+                        <p><strong>Рекомендация:</strong> Настройте роль-бейзед контроль доступа (RBAC) в Jenkins для
+                            ограничения прав пользователей.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите плагин <code>Role-based Authorization Strategy</code>.</li>
+                            <li>Перейдите в <strong>Manage Jenkins &raquo; Configure Global Security</strong>.</li>
+                            <li>Выберите <strong>Role-Based Strategy</strong> в разделе <strong>Authorization</strong>.
+                            </li>
+                            <li>Настройте роли и разрешения согласно вашим требованиям.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Внедрение статического анализа
+                        кода (SAST)</button>
+                    <div class="sub-panel">
+                        <p><strong>Рекомендация:</strong> Используйте инструменты статического анализа кода для
+                            обнаружения потенциальных уязвимостей на ранних этапах.</p>
+
+                        <p><strong>Пример:</strong> Использование <code>SonarQube</code> в Jenkins-пайплайне.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите SonarQube и плагин Jenkins для интеграции.</li>
+                            <li>Добавьте этап анализа в ваш пайплайн:</li>
+                            <div class="code-block">
+                                <pre>
+stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('SonarQube') {
+            sh 'mvn clean verify sonar:sonar'
+        }
+    }
+}
+                                </pre>
+                            </div>
+                            <li>Проверьте отчёты SonarQube и устраните обнаруженные проблемы.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://www.jenkins.io/doc/book/system-administration/security/"
+                            target="_blank">Безопасность в Jenkins</a></li>
+                    <li><a href="https://plugins.jenkins.io/role-strategy/" target="_blank">Плагин Role-based
+                            Authorization Strategy</a></li>
+                    <li><a href="https://www.sonarqube.org/" target="_blank">SonarQube для анализа кода</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Общие рекомендации по
+                безопасности</button>
+            <div class="panel">
+                <p><strong>Описание</strong></p>
+                <p>Помимо специфических настроек, есть общие практики, которые следует соблюдать для обеспечения
+                    безопасности.</p>
+
+                <h3>Рекомендации</h3>
+                <ul>
+                    <li><strong>Регулярное обновление:</strong> Всегда обновляйте используемые приложения и образы до
+                        последних стабильных версий.</li>
+                    <li><strong>Минимизация прав:</strong> Предоставляйте минимально необходимые права для пользователей
+                        и сервисов.</li>
+                    <li><strong>Мониторинг и аудит:</strong> Настройте мониторинг и логирование для отслеживания
+                        подозрительной активности.</li>
+                    <li><strong>Обучение команды:</strong> Обучайте членов команды вопросам безопасности и лучшим
+                        практикам.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top Ten</a></li>
+                    <li><a href="https://kubernetes.io/docs/tasks/administer-cluster/securing-a-cluster/"
+                            target="_blank">Обеспечение безопасности кластера Kubernetes</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../admin/security_practices.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../admin/conclusion.html" class="button">Следующий шаг руководства: Администратор: Завершение и
+                дальнейшие шаги <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="../devops/monitoring_logging.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="conclusion.html" class="button">Следующий шаг по роли: Завершение и дальнейшие шаги <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

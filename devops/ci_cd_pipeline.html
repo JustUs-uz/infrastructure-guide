@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Настройка CI/CD пайплайна | Руководство по DevOps</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item"><a href="infrastructure.html">Подготовка инфраструктуры</a></li>
+            <li class="breadcrumb-item"><a href="containerization.html">Контейнеризация приложений</a></li>
+            <li class="breadcrumb-item"><a href="kubernetes_setup.html">Настройка Kubernetes</a></li>
+            <li class="breadcrumb-item"><a href="traefik_configuration.html">Настройка Traefik в Kubernetes</a></li>
+            <li class="breadcrumb-item active">Настройка CI/CD пайплайна</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-cogs"></i> Настройка CI/CD пайплайна</h1>
+        <p><strong>Роль:</strong> DevOps</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+
+            <!-- Главный шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Настройка CI/CD с помощью GitHub
+                Actions</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11) и GitHub</p>
+
+                <h3>Описание</h3>
+                <p>GitHub Actions предоставляет встроенное решение для автоматизации процессов CI/CD прямо из вашего
+                    репозитория GitHub. В этом шаге мы создадим рабочий процесс (workflow), который будет автоматически
+                    собирать и развёртывать ваше приложение при каждом пуше в репозиторий.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Репозиторий с исходным кодом вашего приложения на GitHub.</li>
+                    <li>Доступ к аккаунту GitHub с правами на создание Actions.</li>
+                    <li>Доступ к Kubernetes-кластеру, куда будет развёртываться приложение.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание файла workflow для
+                        GitHub Actions</button>
+                    <div class="sub-panel">
+                        <p>Файл workflow определяет шаги, которые будут выполняться GitHub Actions при определённых
+                            событиях, таких как пуш в репозиторий.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите в ваш репозиторий на GitHub.</li>
+                            <li>Создайте директорию <code>.github/workflows</code>, если она ещё не существует.</li>
+                            <li>Создайте новый файл в этой директории, например, <code>ci-cd.yml</code>.</li>
+                            <li>Добавьте следующий контент в файл <code>ci-cd.yml</code>:</li>
+                            <div class="code-block">
+                                <pre>
+name: CI/CD Pipeline
+
+on:
+push:
+branches:
+- main
+
+jobs:
+build:
+runs-on: ubuntu-latest
+
+steps:
+- name: Checkout code
+uses: actions/checkout@v2
+
+- name: Set up Docker Buildx
+uses: docker/setup-buildx-action@v1
+
+- name: Login to Docker Hub
+uses: docker/login-action@v1
+with:
+username: ${{ secrets.DOCKERHUB_USERNAME }}
+password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+- name: Build and push Docker image
+uses: docker/build-push-action@v2
+with:
+push: true
+tags: your_dockerhub_username/your_image_name:latest
+
+- name: Set up kubectl
+uses: azure/setup-kubectl@v1
+with:
+version: 'latest'
+
+- name: Deploy to Kubernetes
+run: |
+echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
+kubectl set image deployment/your_deployment your_container=your_dockerhub_username/your_image_name:latest
+                    </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение файла workflow</h4>
+                            <ul>
+                                <li><code>on: push</code>: Запускает workflow при пуше в ветку <code>main</code>.</li>
+                                <li><code>jobs</code>: Определяет задания, которые будут выполнены.</li>
+                                <li><strong>Шаги:</strong>
+                                    <ul>
+                                        <li><strong>Checkout code:</strong> Клонирует репозиторий в рабочее
+                                            пространство.</li>
+                                        <li><strong>Set up Docker Buildx:</strong> Настраивает окружение для сборки
+                                            Docker-образов.</li>
+                                        <li><strong>Login to Docker Hub:</strong> Авторизуется в Docker Hub с
+                                            использованием секретов.</li>
+                                        <li><strong>Build and push Docker image:</strong> Собирает и отправляет
+                                            Docker-образ в Docker Hub.</li>
+                                        <li><strong>Set up kubectl:</strong> Устанавливает kubectl для взаимодействия с
+                                            Kubernetes.</li>
+                                        <li><strong>Deploy to Kubernetes:</strong> Обновляет контейнер в деплойменте на
+                                            новый образ.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Секреты:</strong> Используются для безопасного хранения конфиденциальных
+                                    данных, таких как учётные данные Docker Hub и конфигурация Kubernetes.</li>
+                            </ul>
+
+                            <li>Замените следующие значения на ваши собственные:
+                                <ul>
+                                    <li><code>your_dockerhub_username</code>: Ваше имя пользователя Docker Hub.</li>
+                                    <li><code>your_image_name</code>: Имя вашего Docker-образа.</li>
+                                    <li><code>your_deployment</code>: Имя вашего деплоймента в Kubernetes.</li>
+                                    <li><code>your_container</code>: Имя контейнера внутри деплоймента.</li>
+                                </ul>
+                            </li>
+                            <li>Сохраните файл и закоммитьте изменения в репозиторий.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка секретов в репозитории
+                        GitHub</button>
+                    <div class="sub-panel">
+                        <p>Для того чтобы GitHub Actions мог использовать ваши учётные данные и доступ к кластеру
+                            Kubernetes, необходимо настроить секреты.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>В вашем репозитории на GitHub перейдите в раздел <strong>Settings &raquo; Secrets and
+                                    variables &raquo; Actions</strong>.</li>
+                            <li>Добавьте следующие секреты:
+                                <ul>
+                                    <li><code>DOCKERHUB_USERNAME</code>: Ваше имя пользователя Docker Hub.</li>
+                                    <li><code>DOCKERHUB_TOKEN</code>: Токен доступа Docker Hub. Вы можете создать его в
+                                        настройках вашего аккаунта Docker Hub.</li>
+                                    <li><code>KUBE_CONFIG_DATA</code>: Ваш файл kubeconfig в формате base64.
+                                        <ol>
+                                            <li>Сконвертируйте ваш файл <code>~/.kube/config</code> в base64:
+                                                <div class="code-block">
+                                                    <pre>
+cat ~/.kube/config | base64
+                                        </pre>
+                                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                                            class="fas fa-copy"></i></button>
+                                                </div>
+                                            </li>
+                                            <li>Скопируйте полученный вывод и вставьте в значение секрета
+                                                <code>KUBE_CONFIG_DATA</code>.</li>
+                                        </ol>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Никогда не храните
+                                секреты в открытом виде в репозитории. Используйте секреты GitHub для безопасного
+                                хранения конфиденциальных данных.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Тестирование workflow</button>
+                    <div class="sub-panel">
+                        <p>После того как вы настроили workflow и секреты, можно протестировать работу CI/CD пайплайна.
+                        </p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Внесите изменения в код вашего приложения и закоммитьте их в ветку <code>main</code>.
+                            </li>
+                            <li>Перейдите в раздел <strong>Actions</strong> в вашем репозитории на GitHub.</li>
+                            <li>Вы увидите, что workflow запустился автоматически.</li>
+                            <li>Наблюдайте за выполнением шагов в режиме реального времени.</li>
+                            <li>Убедитесь, что все шаги завершились успешно.</li>
+                            <li>Проверьте ваше приложение в Kubernetes, чтобы убедиться, что оно обновилось с новым
+                                образом.</li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-info-circle"></i> Примечание:</strong> Если возникают ошибки,
+                                внимательно изучите логи выполнения каждого шага для диагностики проблем.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка работы GitHub Actions</h3>
+                <ul>
+                    <li>Workflow запускается при пуше в ветку <code>main</code>.</li>
+                    <li>Docker-образ успешно собирается и отправляется в Docker Hub.</li>
+                    <li>Приложение в Kubernetes обновляется с новым образом.</li>
+                    <li>Приложение работает корректно после обновления.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://docs.github.com/en/actions" target="_blank">Документация GitHub Actions</a>
+                    </li>
+                    <li><a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets"
+                            target="_blank">Использование секретов в GitHub Actions</a></li>
+                    <li><a href="https://github.com/marketplace/actions/kubectl-cli" target="_blank">Действие GitHub для
+                            установки kubectl</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Улучшение безопасности и
+                масштабируемости</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Теперь, когда мы настроили базовый CI/CD пайплайн с помощью GitHub Actions, важно обратить внимание
+                    на безопасность и масштабируемость.</p>
+
+                <h3>Рекомендации</h3>
+                <ul>
+                    <li><strong>Использование сервисных аккаунтов Kubernetes:</strong> Создайте сервисный аккаунт с
+                        ограниченными правами для деплоя приложений и используйте его в вашем workflow.</li>
+                    <li><strong>Управление доступом в Docker Hub:</strong> Используйте токены доступа с ограниченными
+                        правами вместо паролей.</li>
+                    <li><strong>Мониторинг и уведомления:</strong> Настройте уведомления о статусе workflow и мониторинг
+                        приложения в Kubernetes.</li>
+                    <li><strong>Масштабируемость:</strong> При необходимости оптимизируйте workflow, разделив его на
+                        несколько параллельных заданий.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/"
+                            target="_blank">Настройка сервисных аккаунтов в Kubernetes</a></li>
+                    <li><a href="https://docs.docker.com/docker-hub/access-tokens/" target="_blank">Токены доступа
+                            Docker Hub</a></li>
+                    <li><a href="https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows"
+                            target="_blank">Мониторинг и отладка GitHub Actions</a></li>
+                </ul>
+            </div>
+
+            <!-- Альтернативный подход -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Альтернативный подход: Настройка CI/CD с
+                помощью Jenkins</button>
+            <div class="panel">
+                <p>В качестве альтернативы вы можете использовать Jenkins для настройки CI/CD пайплайна. Jenkins
+                    предоставляет гибкость и расширяемость, позволяя интегрироваться с различными инструментами и
+                    системами.</p>
+
+
+
+
+
+                <!-- Главный шаг 1 -->
+                <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Установка Jenkins</button>
+                <div class="panel">
+                    <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                    <h3>Описание</h3>
+                    <p>Jenkins — это популярный инструмент для автоматизации, который используется для настройки CI/CD
+                        пайплайнов. В этом шаге мы установим Jenkins на нашу виртуальную машину с FreeBSD.</p>
+
+                    <h3>Предварительные требования</h3>
+                    <ul>
+                        <li>Установленная и настроенная система FreeBSD.</li>
+                        <li>Пользователь с правами суперпользователя.</li>
+                        <li>Доступ к интернету с виртуальной машины.</li>
+                        <li>Установленный Docker и Docker Compose.</li>
+                    </ul>
+
+                    <!-- Подшаги -->
+                    <div class="sub-steps">
+                        <!-- Подшаг 1 -->
+                        <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание директории для
+                            Jenkins</button>
+                        <div class="sub-panel">
+                            <p>Создадим отдельную директорию для размещения файлов Jenkins.</p>
+
+                            <p><strong>Действия:</strong></p>
+                            <ol>
+                                <li>Перейдите в домашнюю директорию:</li>
+                                <div class="code-block">
+                                    <pre>
+cd ~
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                                <li>Создайте директорию <code>jenkins</code> и перейдите в неё:</li>
+                                <div class="code-block">
+                                    <pre>
+mkdir jenkins
+cd jenkins
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                            </ol>
+                        </div>
+
+                        <!-- Подшаг 2 -->
+                        <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание файла
+                            docker-compose.yml</button>
+                        <div class="sub-panel">
+                            <p>Мы будем запускать Jenkins в контейнере Docker с помощью Docker Compose.</p>
+
+                            <p><strong>Действия:</strong></p>
+                            <ol>
+                                <li>Создайте файл <code>docker-compose.yml</code>:</li>
+                                <div class="code-block">
+                                    <pre>
+nano docker-compose.yml
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                                <li>Добавьте следующий контент в файл:</li>
+                                <div class="code-block">
+                                    <pre>
+version: '3.7'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    networks:
+      - jenkins-network
+
+volumes:
+  jenkins_home:
+
+networks:
+  jenkins-network:
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+
+                                <h4>Объяснение файла docker-compose.yml</h4>
+                                <ul>
+                                    <li><code>image: jenkins/jenkins:lts</code>: Используем официальный образ Jenkins с
+                                        меткой LTS (Long-Term Support).</li>
+                                    <li><code>ports</code>: Пробрасываем порты 8080 (веб-интерфейс Jenkins) и 50000 (для
+                                        подключения агентов).</li>
+                                    <li><code>volumes</code>: Создаём том для сохранения данных Jenkins.</li>
+                                    <li><code>networks</code>: Создаём отдельную сеть для Jenkins.</li>
+                                </ul>
+                                <li>Сохраните файл и выйдите из редактора.</li>
+                            </ol>
+                        </div>
+
+                        <!-- Подшаг 3 -->
+                        <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Запуск Jenkins с помощью
+                            Docker
+                            Compose</button>
+                        <div class="sub-panel">
+                            <p><strong>Действия:</strong></p>
+                            <ol>
+                                <li>Запустите Jenkins в фоновом режиме:</li>
+                                <div class="code-block">
+                                    <pre>
+docker-compose up -d
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                                <li>Проверьте, что контейнер Jenkins запущен:</li>
+                                <div class="code-block">
+                                    <pre>
+docker ps
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                            </ol>
+
+                            <h4>Объяснение команды</h4>
+                            <ul>
+                                <li><code>docker-compose up -d</code>: Запускает сервисы, определённые в файле
+                                    <code>docker-compose.yml</code>, в фоновом режиме.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Подшаг 4 -->
+                        <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Доступ к веб-интерфейсу
+                            Jenkins</button>
+                        <div class="sub-panel">
+                            <p>После запуска контейнера Jenkins доступен через веб-браузер.</p>
+
+                            <p><strong>Действия:</strong></p>
+                            <ol>
+                                <li>Откройте веб-браузер на хостовой машине.</li>
+                                <li>Перейдите по адресу <code>http://IP-адрес-виртуальной-машины:8080</code>.</li>
+                                <li>На странице приветствия Jenkins попросит ввести пароль для разблокировки.</li>
+                                <li>Получите пароль из логов контейнера Jenkins:</li>
+                                <div class="code-block">
+                                    <pre>
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                                <li>Скопируйте пароль и вставьте его в веб-интерфейсе Jenkins для разблокировки.</li>
+                                <li>Следуйте инструкциям по первоначальной настройке Jenkins:
+                                    <ul>
+                                        <li>Выберите установку рекомендованных плагинов.</li>
+                                        <li>Создайте администратора, указав имя пользователя, пароль и email.</li>
+                                        <li>Подтвердите URL Jenkins или оставьте по умолчанию.</li>
+                                    </ul>
+                                </li>
+                            </ol>
+
+                            <div class="info-block">
+                                <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Убедитесь, что порт
+                                    8080 не блокируется брандмауэром, и ваш хост может подключиться к виртуальной машине
+                                    по
+                                    этому порту.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Чек-лист: Проверка установки Jenkins</h3>
+                    <ul>
+                        <li>Контейнер Jenkins запущен и отображается в списке <code>docker ps</code>.</li>
+                        <li>Веб-интерфейс Jenkins доступен по указанному адресу.</li>
+                        <li>Вы успешно выполнили первоначальную настройку Jenkins.</li>
+                    </ul>
+
+                    <h3>Полезные ссылки</h3>
+                    <ul>
+                        <li><a href="https://www.jenkins.io/doc/book/installing/docker/" target="_blank">Установка
+                                Jenkins с
+                                помощью Docker</a></li>
+                        <li><a href="https://www.jenkins.io/doc/" target="_blank">Официальная документация Jenkins</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Главный шаг 2 -->
+                <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Настройка пайплайна для сборки и
+                    развёртывания приложения</button>
+                <div class="panel">
+                    <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                    <h3>Описание</h3>
+                    <p>В этом шаге мы создадим Jenkins-пайплайн, который будет автоматически собирать наше приложение,
+                        создавать Docker-образ и развёртывать его в Kubernetes-кластере.</p>
+
+                    <h3>Предварительные требования</h3>
+                    <ul>
+                        <li>Работающий Jenkins с доступом к веб-интерфейсу.</li>
+                        <li>Репозиторий исходного кода приложения (например, на GitHub).</li>
+                        <li>Доступ к Kubernetes-кластеру из Jenkins (настройка kubeconfig).</li>
+                    </ul>
+
+                    <!-- Подшаги -->
+                    <div class="sub-steps">
+                        <!-- Подшаг 1 -->
+                        <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка необходимых
+                            плагинов в
+                            Jenkins</button>
+                        <div class="sub-panel">
+                            <p>Для работы с Docker и Kubernetes нам потребуются определённые плагины Jenkins.</p>
+
+                            <p><strong>Действия:</strong></p>
+                            <ol>
+                                <li>В веб-интерфейсе Jenkins перейдите в <strong>Manage Jenkins &raquo; Manage
+                                        Plugins</strong>.</li>
+                                <li>Перейдите на вкладку <strong>Available</strong>.</li>
+                                <li>Найдите и установите следующие плагины:
+                                    <ul>
+                                        <li><code>Docker Pipeline</code></li>
+                                        <li><code>Kubernetes CLI</code></li>
+                                        <li><code>GitHub Integration</code> (если используете GitHub)</li>
+                                    </ul>
+                                </li>
+                                <li>После установки плагинов перезапустите Jenkins, если потребуется.</li>
+                            </ol>
+                        </div>
+
+                        <!-- Подшаг 2 -->
+                        <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание Jenkins
+                            Pipeline</button>
+                        <div class="sub-panel">
+                            <p>Создадим новый пайплайн в Jenkins для автоматизации процесса сборки и развёртывания.</p>
+
+                            <p><strong>Действия:</strong></p>
+                            <ol>
+                                <li>На главной странице Jenkins нажмите <strong>New Item</strong>.</li>
+                                <li>Введите имя проекта, например, <code>MyApp-Pipeline</code>.</li>
+                                <li>Выберите тип проекта <strong>Pipeline</strong> и нажмите <strong>OK</strong>.</li>
+                                <li>В настройках проекта прокрутите вниз до раздела <strong>Pipeline</strong>.</li>
+                                <li>Выберите опцию <strong>Pipeline script</strong> и вставьте следующий скрипт:</li>
+                                <div class="code-block">
+                                    <pre>
+pipeline {
+    agent any
+
+    environment {
+        registry = "your_dockerhub_username/myapp"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+    }
+
+    stages {
+        stage('Cloning Git') {
+            steps {
+                git 'https://github.com/yourusername/your-repo.git'
+            }
+        }
+
+        stage('Building Image') {
+            steps{
+                script {
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
+            }
+        }
+
+        stage('Pushing to Docker Hub') {
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl set image deployment/myapp myapp=${registry}:$BUILD_NUMBER'
+            }
+        }
+    }
+}
+                                </pre>
+                                </div>
+
+                                <h4>Объяснение скрипта пайплайна</h4>
+                                <ul>
+                                    <li><code>agent any</code>: Пайплайн будет выполняться на любом доступном агенте.
+                                    </li>
+                                    <li><code>environment</code>: Определяем переменные окружения, включая имя образа
+                                        Docker
+                                        и учётные данные.</li>
+                                    <li><code>stages</code>: Определяем этапы пайплайна:
+                                        <ul>
+                                            <li><strong>Cloning Git</strong>: Клонируем репозиторий с исходным кодом.
+                                            </li>
+                                            <li><strong>Building Image</strong>: Собираем Docker-образ.</li>
+                                            <li><strong>Pushing to Docker Hub</strong>: Отправляем образ в Docker Hub.
+                                            </li>
+                                            <li><strong>Deploy to Kubernetes</strong>: Обновляем приложение в Kubernetes
+                                                с
+                                                новым образом.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                                <li>Замените следующие значения на свои:
+                                    <ul>
+                                        <li><code>your_dockerhub_username/myapp</code>: Ваше имя пользователя Docker Hub
+                                            и
+                                            имя репозитория.</li>
+                                        <li><code>'https://github.com/yourusername/your-repo.git'</code>: URL вашего
+                                            репозитория с исходным кодом.</li>
+                                        <li><code>dockerhub</code>: ID учётных данных Docker Hub в Jenkins (будет
+                                            настроено
+                                            на следующем шаге).</li>
+                                    </ul>
+                                </li>
+                                <li>Сохраните проект.</li>
+                            </ol>
+                        </div>
+
+                        <!-- Подшаг 3 -->
+                        <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка учётных данных в
+                            Jenkins</button>
+                        <div class="sub-panel">
+                            <p>Для доступа к Docker Hub и, при необходимости, к приватным репозиториям, нужно настроить
+                                учётные данные в Jenkins.</p>
+
+                            <p><strong>Действия:</strong></p>
+                            <ol>
+                                <li>В веб-интерфейсе Jenkins перейдите в <strong>Manage Jenkins &raquo; Manage
+                                        Credentials</strong>.</li>
+                                <li>Выберите область <strong>(global)</strong> и нажмите <strong>Add
+                                        Credentials</strong>.
+                                </li>
+                                <li>Добавьте учётные данные Docker Hub:
+                                    <ul>
+                                        <li><strong>Kind:</strong> Username with password</li>
+                                        <li><strong>Scope:</strong> Global</li>
+                                        <li><strong>Username:</strong> Ваше имя пользователя Docker Hub</li>
+                                        <li><strong>Password:</strong> Ваш пароль Docker Hub</li>
+                                        <li><strong>ID:</strong> <code>dockerhub</code> (соответствует значению в
+                                            пайплайне)
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>При необходимости добавьте учётные данные для доступа к репозиторию исходного кода.
+                                </li>
+                            </ol>
+                        </div>
+
+                        <!-- Подшаг 4 -->
+                        <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка доступа к
+                            Kubernetes из
+                            Jenkins</button>
+                        <div class="sub-panel">
+                            <p>Jenkins должен иметь доступ к Kubernetes-кластеру для выполнения команд
+                                <code>kubectl</code>.
+                            </p>
+
+                            <p><strong>Действия:</strong></p>
+                            <ol>
+                                <li>Установите <code>kubectl</code> внутри контейнера Jenkins:
+                                    <div class="code-block">
+                                        <pre>
+docker exec -it jenkins bash
+apt-get update && apt-get install -y kubectl
+exit
+                                    </pre>
+                                        <button class="copy-button" onclick="copyCode(this)"><i
+                                                class="fas fa-copy"></i></button>
+                                    </div>
+                                </li>
+                                <li>Скопируйте файл <code>~/.kube/config</code> с хостовой машины в контейнер Jenkins:
+                                    <div class="code-block">
+                                        <pre>
+docker cp ~/.kube/config jenkins:/var/jenkins_home/.kube/config
+                                    </pre>
+                                        <button class="copy-button" onclick="copyCode(this)"><i
+                                                class="fas fa-copy"></i></button>
+                                    </div>
+                                </li>
+                                <li>Убедитесь, что Jenkins имеет доступ к кластеру:
+                                    <div class="code-block">
+                                        <pre>
+docker exec -it jenkins kubectl get nodes
+                                    </pre>
+                                        <button class="copy-button" onclick="copyCode(this)"><i
+                                                class="fas fa-copy"></i></button>
+                                    </div>
+                                    Вы должны увидеть список узлов кластера.
+                                </li>
+                            </ol>
+
+                            <div class="info-block">
+                                <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Это простой способ
+                                    настройки доступа для тестовых целей. В продакшене рекомендуется использовать более
+                                    безопасные методы, такие как сервисные аккаунты и ограничение прав доступа.</p>
+                            </div>
+                        </div>
+
+                        <!-- Подшаг 5 -->
+                        <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Запуск и тестирование
+                            пайплайна</button>
+                        <div class="sub-panel">
+                            <p>Теперь мы можем запустить наш пайплайн и проверить его работу.</p>
+
+                            <p><strong>Действия:</strong></p>
+                            <ol>
+                                <li>Перейдите на страницу проекта <code>MyApp-Pipeline</code> в Jenkins.</li>
+                                <li>Нажмите <strong>Build Now</strong> для запуска пайплайна.</li>
+                                <li>Следите за выполнением пайплайна в режиме реального времени, нажав на активный билд
+                                    и
+                                    перейдя в <strong>Console Output</strong>.</li>
+                                <li>Убедитесь, что все этапы выполнены успешно:
+                                    <ul>
+                                        <li>Клонирование репозитория прошло успешно.</li>
+                                        <li>Docker-образ успешно собран и отправлен в Docker Hub.</li>
+                                        <li>Приложение в Kubernetes обновлено с новым образом.</li>
+                                    </ul>
+                                </li>
+                                <li>Проверьте приложение в Kubernetes, убедившись, что оно работает с новым образом:
+                                    <div class="code-block">
+                                        <pre>
+kubectl get deployments
+kubectl describe deployment myapp
+                                    </pre>
+                                        <button class="copy-button" onclick="copyCode(this)"><i
+                                                class="fas fa-copy"></i></button>
+                                    </div>
+                                </li>
+                                <li>Откройте приложение в браузере и убедитесь, что изменения в коде (если были)
+                                    отображаются корректно.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <h3>Чек-лист: Проверка работы пайплайна</h3>
+                    <ul>
+                        <li>Все этапы пайплайна выполняются без ошибок.</li>
+                        <li>Docker-образ успешно отправляется в Docker Hub.</li>
+                        <li>Приложение в Kubernetes обновляется с новым образом.</li>
+                        <li>Приложение работает корректно после обновления.</li>
+                    </ul>
+
+                    <h3>Полезные ссылки</h3>
+                    <ul>
+                        <li><a href="https://www.jenkins.io/doc/book/pipeline/" target="_blank">Документация по Jenkins
+                                Pipeline</a></li>
+                        <li><a href="https://plugins.jenkins.io/docker-workflow/" target="_blank">Плагин Docker
+                                Pipeline</a>
+                        </li>
+                        <li><a href="https://kubernetes.io/ru/docs/tasks/tools/install-kubectl/"
+                                target="_blank">Установка
+                                kubectl</a></li>
+                    </ul>
+                </div>
+
+                <!-- Главный шаг 3 -->
+                <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Улучшение безопасности и
+                    масштабируемости</button>
+                <div class="panel">
+                    <p><strong>Описание</strong></p>
+                    <p>Теперь, когда мы настроили базовый CI/CD пайплайн, важно обратить внимание на безопасность и
+                        возможность масштабирования.</p>
+
+                    <h3>Рекомендации</h3>
+                    <ul>
+                        <li><strong>Использование Credential Binding:</strong> Храните секреты и учётные данные в
+                            безопасном
+                            хранилище Jenkins и используйте их в пайплайне с помощью безопасных методов.</li>
+                        <li><strong>Настройка Role-Based Access Control (RBAC):</strong> Ограничьте доступ Jenkins к
+                            Kubernetes с помощью настроек RBAC, предоставляя только необходимые права.</li>
+                        <li><strong>Масштабируемость Jenkins:</strong> Рассмотрите возможность использования Jenkins в
+                            Kubernetes с динамическим добавлением агентов.</li>
+                        <li><strong>Мониторинг и логирование:</strong> Настройте мониторинг Jenkins и пайплайнов для
+                            быстрого обнаружения и устранения проблем.</li>
+                    </ul>
+
+                    <h3>Полезные ссылки</h3>
+                    <ul>
+                        <li><a href="https://www.jenkins.io/doc/book/using/using-credentials/" target="_blank">Работа с
+                                учётными данными в Jenkins</a></li>
+                        <li><a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/" target="_blank">RBAC
+                                в
+                                Kubernetes</a></li>
+                        <li><a href="https://www.jenkins.io/doc/book/scaling-kubernetes/"
+                                target="_blank">Масштабирование
+                                Jenkins с помощью Kubernetes</a></li>
+                    </ul>
+                </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../devops/traefik_configuration.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../developer/ci_cd.html" class="button">Следующий шаг руководства: Разработчик: CI/CD для
+                разработчиков <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="../devops/traefik_configuration.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="monitoring_logging.html" class="button">Следующий шаг по роли: Мониторинг и логирование <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

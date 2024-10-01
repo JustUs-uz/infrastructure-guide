@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Docker и Kubernetes | Руководство для разработчика</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="preparation.html">Подготовка среды разработки</a></li>
+            <li class="breadcrumb-item"><a href="work_with_code.html">Работа с кодом</a></li>
+            <li class="breadcrumb-item"><a href="ci_cd.html">CI/CD для разработчиков</a></li>
+            <li class="breadcrumb-item active">Docker и Kubernetes</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-docker"></i> Docker и Kubernetes</h1>
+        <p><strong>Роль:</strong> Разработчик</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Главный шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Понимание основ Docker</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>В этом шаге мы рассмотрим, что такое Docker, и почему его используют в современном разработке и
+                    деплое приложений.</p>
+
+                <h3>Что такое Docker?</h3>
+                <ul>
+                    <li>Docker — это платформа для разработки, доставки и запуска приложений в изолированных средах,
+                        называемых контейнерами.</li>
+                    <li>Контейнеры позволяют упаковать приложение со всеми его зависимостями и обеспечить его работу в
+                        любой среде.</li>
+                </ul>
+
+                <h3>Преимущества использования Docker</h3>
+                <ul>
+                    <li>Портативность: Контейнеры могут быть запущены на любой системе с установленным Docker.</li>
+                    <li>Изоляция: Обеспечивает изолированную среду выполнения для приложений.</li>
+                    <li>Скалируемость: Упрощает развертывание и масштабирование приложений.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://www.docker.com/" target="_blank">Официальный сайт Docker</a></li>
+                    <li><a href="https://docs.docker.com/get-started/overview/" target="_blank">Документация Docker для
+                            начинающих</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Установка Docker на Windows 11</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Установим Docker Desktop на вашу локальную машину для работы с контейнерами.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Windows 11 Home Edition с включенной WSL 2 (Windows Subsystem for Linux).</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Установка WSL 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка и настройка WSL
+                        2</button>
+                    <div class="sub-panel">
+                        <p>Docker Desktop на Windows 11 Home Edition требует WSL 2 для работы.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте PowerShell от имени администратора.</li>
+                            <li>Выполните команду для включения компонента WSL:</li>
+                            <div class="code-block">
+                                <pre>
+    dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Включите компонент виртуализации:</li>
+                            <div class="code-block">
+                                <pre>
+    dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Перезагрузите компьютер.</li>
+                            <li>После перезагрузки установите WSL 2 по умолчанию:</li>
+                            <div class="code-block">
+                                <pre>
+    wsl --set-default-version 2
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Установите дистрибутив Linux (например, Ubuntu) из Microsoft Store.</li>
+                        </ol>
+
+                        <p><strong>Полезные ссылки:</strong></p>
+                        <ul>
+                            <li><a href="https://docs.microsoft.com/ru-ru/windows/wsl/install-win10"
+                                    target="_blank">Установка WSL на Windows 10 и 11</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2: Установка Docker Desktop -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Docker Desktop</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите на сайт <a href="https://www.docker.com/products/docker-desktop"
+                                    target="_blank">Docker Desktop</a>.</li>
+                            <li>Скачайте установщик для Windows.</li>
+                            <li>Запустите установщик и следуйте инструкциям.</li>
+                            <li>В процессе установки убедитесь, что опция <strong>Use WSL 2 instead of Hyper-V</strong>
+                                выбрана.</li>
+                            <li>После установки запустите Docker Desktop.</li>
+                            <li>Проверьте установку, выполнив команду в PowerShell или командной строке:</li>
+                            <div class="code-block">
+                                <pre>
+    docker --version
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <p><strong>Объяснение:</strong> Docker Desktop позволяет управлять контейнерами и образами
+                            Docker прямо с вашей машины Windows.</p>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка установки Docker</h3>
+                <ul>
+                    <li>Docker Desktop установлен и запущен.</li>
+                    <li>Команда <code>docker --version</code> выводит версию Docker.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Создание Dockerfile для вашего
+                приложения</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Создадим Dockerfile для контейнеризации нашего Node.js приложения.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Docker установлен и работает.</li>
+                    <li>Проект готов к контейнеризации.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Создание Dockerfile -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание файла
+                        Dockerfile</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>В корневой директории проекта создайте файл <code>Dockerfile</code>:</li>
+                            <div class="code-block">
+                                <pre>
+    touch Dockerfile
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Откройте файл <code>Dockerfile</code> в текстовом редакторе и добавьте следующий код:
+                            </li>
+                            <div class="code-block">
+                                <pre>
+    # Базовый образ
+    FROM node:14
+
+    # Установка рабочей директории
+    WORKDIR /app
+
+    # Копирование package.json и package-lock.json
+    COPY package*.json ./
+
+    # Установка зависимостей
+    RUN npm install
+
+    # Копирование исходного кода
+    COPY . .
+
+    # Сборка проекта
+    RUN npm run build
+
+    # Открытие порта
+    EXPOSE 3000
+
+    # Команда для запуска приложения
+    CMD ["npm", "start"]
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение Dockerfile</h4>
+                            <ul>
+                                <li><code>FROM node:14</code>: Используем официальный образ Node.js версии 14.</li>
+                                <li><code>WORKDIR /app</code>: Устанавливаем рабочую директорию внутри контейнера.</li>
+                                <li><code>COPY package*.json ./</code>: Копируем файлы <code>package.json</code> и
+                                    <code>package-lock.json</code>.
+                                </li>
+                                <li><code>RUN npm install</code>: Устанавливаем зависимости.</li>
+                                <li><code>COPY . .</code>: Копируем все файлы проекта в контейнер.</li>
+                                <li><code>RUN npm run build</code>: Собираем проект с помощью Gulp.</li>
+                                <li><code>EXPOSE 3000</code>: Открываем порт 3000 для доступа к приложению.</li>
+                                <li><code>CMD ["npm", "start"]</code>: Команда для запуска приложения.</li>
+                            </ul>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Создание .dockerignore -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание файла
+                        .dockerignore</button>
+                    <div class="sub-panel">
+                        <p>Файл <code>.dockerignore</code> указывает Docker, какие файлы и директории игнорировать при
+                            сборке образа.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>.dockerignore</code> в корневой директории проекта:</li>
+                            <div class="code-block">
+                                <pre>
+    touch .dockerignore
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте следующие строки в файл <code>.dockerignore</code>:</li>
+                            <div class="code-block">
+                                <pre>
+    node_modules
+    npm-debug.log
+    Dockerfile
+    docker-compose.yml
+    .git
+    .gitignore
+    .github
+    README.md
+    dist
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение .dockerignore</h4>
+                            <ul>
+                                <li><code>node_modules</code>: Не копировать папку с модулями Node.js (они будут
+                                    установлены внутри контейнера).</li>
+                                <li>Другие файлы и папки, которые не нужны внутри контейнера.</li>
+                            </ul>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка Dockerfile</h3>
+                <ul>
+                    <li>Файл <code>Dockerfile</code> создан и содержит корректные инструкции.</li>
+                    <li>Файл <code>.dockerignore</code> создан и содержит необходимые исключения.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Сборка и запуск Docker-образа</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Соберём Docker-образ нашего приложения и запустим его в контейнере.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Сборка Docker-образа -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Сборка образа</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте терминал в корневой директории проекта.</li>
+                            <li>Выполните команду для сборки образа:</li>
+                            <div class="code-block">
+                                <pre>
+    docker build -t yourusername/yourapp:latest .
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Замените <code>yourusername/yourapp</code> на желаемое имя образа.</p>
+
+                            <h4>Объяснение команды</h4>
+                            <ul>
+                                <li><code>docker build</code>: Команда для сборки Docker-образа.</li>
+                                <li><code>-t yourusername/yourapp:latest</code>: Тегируем образ с указанным именем и
+                                    тегом <code>latest</code>.</li>
+                                <li><code>.</code>: Указываем текущую директорию как контекст сборки.</li>
+                            </ul>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Запуск контейнера -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Запуск контейнера</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Выполните команду для запуска контейнера:</li>
+                            <div class="code-block">
+                                <pre>
+    docker run -p 3000:3000 yourusername/yourapp:latest
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение команды</h4>
+                            <ul>
+                                <li><code>docker run</code>: Команда для запуска контейнера из образа.</li>
+                                <li><code>-p 3000:3000</code>: Пробрасываем порт 3000 из контейнера на порт 3000
+                                    локальной машины.</li>
+                                <li><code>yourusername/yourapp:latest</code>: Указываем имя образа для запуска.</li>
+                            </ul>
+
+                            <li>Откройте браузер и перейдите по адресу <a href="http://localhost:3000"
+                                    target="_blank">http://localhost:3000</a>.</li>
+                            <li>Убедитесь, что приложение работает внутри контейнера.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка работы контейнера</h3>
+                <ul>
+                    <li>Docker-образ успешно собран без ошибок.</li>
+                    <li>Контейнер запускается и приложение доступно по адресу <code>http://localhost:3000</code>.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 5 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 5: Понимание основ Kubernetes</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Рассмотрим, что такое Kubernetes, и как он помогает в управлении контейнеризированными приложениями.
+                </p>
+
+                <h3>Что такое Kubernetes?</h3>
+                <ul>
+                    <li>Kubernetes — это система оркестрации контейнеров с открытым исходным кодом, разработанная
+                        Google.</li>
+                    <li>Она позволяет автоматизировать развертывание, масштабирование и управление контейнеризованными
+                        приложениями.</li>
+                </ul>
+
+                <h3>Преимущества использования Kubernetes</h3>
+                <ul>
+                    <li>Автоматическое масштабирование приложений.</li>
+                    <li>Балансировка нагрузки и управление трафиком.</li>
+                    <li>Самовосстановление контейнеров при сбоях.</li>
+                    <li>Управление конфигурацией и секретами.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://kubernetes.io/ru/" target="_blank">Официальный сайт Kubernetes</a></li>
+                    <li><a href="https://kubernetes.io/ru/docs/concepts/overview/what-is-kubernetes/"
+                            target="_blank">Что такое Kubernetes?</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 6 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 6: Установка Kubernetes (с использованием
+                Docker Desktop)</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Включим Kubernetes в Docker Desktop для работы с кластерами локально.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Включение Kubernetes -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Включение Kubernetes в Docker
+                        Desktop</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте Docker Desktop.</li>
+                            <li>Перейдите в настройки (иконка шестерёнки).</li>
+                            <li>Выберите раздел <strong>Kubernetes</strong>.</li>
+                            <li>Поставьте галочку <strong>Enable Kubernetes</strong>.</li>
+                            <li>Нажмите <strong>Apply & Restart</strong>.</li>
+                            <li>Дождитесь, пока Kubernetes будет установлен и запущен (это может занять несколько
+                                минут).</li>
+                        </ol>
+
+                        <p><strong>Объяснение:</strong> Docker Desktop позволяет запускать однузвёздочный кластер
+                            Kubernetes для разработки и тестирования.</p>
+                    </div>
+
+                    <!-- Подшаг 2: Проверка установки kubectl -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Проверка kubectl</button>
+                    <div class="sub-panel">
+                        <p>Утилита <code>kubectl</code> используется для управления Kubernetes-кластером.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте PowerShell или командную строку.</li>
+                            <li>Проверьте версию kubectl:</li>
+                            <div class="code-block">
+                                <pre>
+    kubectl version --client
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Если kubectl не установлен, его можно установить с помощью следующих команд:</li>
+                            <div class="code-block">
+                                <pre>
+    choco install kubernetes-cli
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p><strong>Примечание:</strong> Эта команда использует Chocolatey пакетный менеджер.
+                                Убедитесь, что он установлен.</p>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка Kubernetes</h3>
+                <ul>
+                    <li>Kubernetes включен в Docker Desktop.</li>
+                    <li>Команда <code>kubectl version --client</code> выводит версию клиента kubectl.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 7 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 7: Создание манифестов Kubernetes для
+                вашего приложения</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Создадим файлы манифестов Kubernetes для развертывания нашего приложения в кластер.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Создание Deployment манифеста -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание deployment.yaml</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите в директорию <code>kubernetes</code> вашего проекта.</li>
+                            <li>Создайте файл <code>deployment.yaml</code>.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: my-app-deployment
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: my-app
+      template:
+        metadata:
+          labels:
+            app: my-app
+        spec:
+          containers:
+          - name: my-app-container
+            image: yourusername/yourapp:latest
+            ports:
+            - containerPort: 3000
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение deployment.yaml</h4>
+                            <ul>
+                                <li><code>apiVersion: apps/v1</code>: Версия API Kubernetes.</li>
+                                <li><code>kind: Deployment</code>: Тип объекта Kubernetes.</li>
+                                <li><code>metadata</code>: Метаданные объекта.</li>
+                                <li><code>spec</code>: Спецификация Deployment.</li>
+                                <li><code>replicas: 2</code>: Количество подов (Pods) для запуска.</li>
+                                <li><code>selector</code>: Указывает, какие поды управляются этим Deployment.</li>
+                                <li><code>template</code>: Шаблон для создания подов.</li>
+                            </ul>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Создание Service манифеста -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание service.yaml</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>service.yaml</code> в той же директории.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: my-app-service
+    spec:
+      type: LoadBalancer
+      selector:
+        app: my-app
+      ports:
+      - protocol: TCP
+        port: 80
+        targetPort: 3000
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение service.yaml</h4>
+                            <ul>
+                                <li><code>kind: Service</code>: Тип объекта Kubernetes.</li>
+                                <li><code>type: LoadBalancer</code>: Сервис будет доступен извне через балансировщик
+                                    нагрузки.</li>
+                                <li><code>selector</code>: Связывает сервис с подами по метке <code>app: my-app</code>.
+                                </li>
+                                <li><code>ports</code>: Указывает, что порт 80 на сервисе направляется на порт 3000
+                                    внутри пода.</li>
+                            </ul>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка манифестов</h3>
+                <ul>
+                    <li>Файлы <code>deployment.yaml</code> и <code>service.yaml</code> созданы и содержат корректный
+                        код.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 8 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 8: Развертывание приложения в
+                Kubernetes</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Развернём наше приложение в локальном Kubernetes-кластере.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Применение манифестов -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Применение манифестов</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте терминал и перейдите в директорию <code>kubernetes</code>.</li>
+                            <li>Примените манифесты командой:</li>
+                            <div class="code-block">
+                                <pre>
+    kubectl apply -f deployment.yaml
+    kubectl apply -f service.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Проверка статуса -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Проверка статуса
+                        ресурсов</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Проверьте статус подов:</li>
+                            <div class="code-block">
+                                <pre>
+    kubectl get pods
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте статус сервисов:</li>
+                            <div class="code-block">
+                                <pre>
+    kubectl get services
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Найдите EXTERNAL-IP вашего сервиса (может быть указано как
+                                <code>&lt;pending&gt;</code>).
+                            </li>
+                            <li>Поскольку мы используем локальный кластер, можно получить доступ к сервису по NodePort
+                                или использовать port-forward:</li>
+                            <div class="code-block">
+                                <pre>
+    kubectl port-forward service/my-app-service 8080:80
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Откройте браузер и перейдите по адресу <a href="http://localhost:8080"
+                                    target="_blank">http://localhost:8080</a>.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка развертывания</h3>
+                <ul>
+                    <li>Поды запущены и имеют статус <code>Running</code>.</li>
+                    <li>Сервис доступен и приложение работает в Kubernetes.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 9 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 9: Очистка ресурсов Kubernetes</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>После завершения работы важно очистить ресурсы Kubernetes.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Удаление ресурсов -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Удаление Deployment и
+                        Service</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Удалите ресурсы командой:</li>
+                            <div class="code-block">
+                                <pre>
+    kubectl delete -f deployment.yaml
+    kubectl delete -f service.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте, что ресурсы удалены:</li>
+                            <div class="code-block">
+                                <pre>
+    kubectl get pods
+    kubectl get services
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка очистки ресурсов</h3>
+                <ul>
+                    <li>Все созданные поды и сервисы удалены.</li>
+                    <li>Кластер Kubernetes не содержит ваших ресурсов.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 10 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 10: Продолжение работы с Docker и
+                Kubernetes</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Теперь, когда вы познакомились с основами Docker и Kubernetes, вы можете продолжить изучение и
+                    применение этих технологий:</p>
+
+                <ul>
+                    <li>Изучите Docker Compose для управления многоконтейнерными приложениями.</li>
+                    <li>Настройте CI/CD процесс для автоматического создания образов и развертывания в Kubernetes.</li>
+                    <li>Изучите Helm для управления чартами Kubernetes.</li>
+                    <li>Рассмотрите развертывание приложения в облачных сервисах Kubernetes (например, GKE, EKS, AKS).
+                    </li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://docs.docker.com/compose/" target="_blank">Документация Docker Compose</a></li>
+                    <li><a href="https://helm.sh/" target="_blank">Helm - The Kubernetes Package Manager</a></li>
+                    <li><a href="https://kubernetes.io/ru/docs/home/" target="_blank">Документация Kubernetes</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../devops/monitoring_logging.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../admin/user_management.html" class="button">Следующий шаг руководства: Администратор: Управление
+                пользователями и правами доступа <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="../developer/ci_cd.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу
+                по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="conclusion.html" class="button">Следующий шаг по роли: Заключение <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

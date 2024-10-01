@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Практики безопасности | Руководство для администратора</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item"><a href="os_installation.html">Установка и настройка ОС</a></li>
+            <li class="breadcrumb-item"><a href="network_configuration.html">Настройка сетевой инфраструктуры</a></li>
+            <li class="breadcrumb-item"><a href="user_management.html">Управление пользователями и правами доступа</a>
+            </li>
+            <li class="breadcrumb-item"><a href="system_monitoring.html">Мониторинг и обслуживание системы</a></li>
+            <li class="breadcrumb-item active">Практики безопасности</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-shield-alt"></i> Практики безопасности</h1>
+        <p><strong>Роль:</strong> Администратор</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Настройка брандмауэра</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Брандмауэр помогает контролировать входящий и исходящий сетевой трафик, обеспечивая дополнительный
+                    уровень безопасности. В FreeBSD доступны два основных брандмауэра: <code>pf</code> и
+                    <code>ipfw</code>. В этом разделе мы рассмотрим настройку <code>pf</code>.
+                </p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Включение брандмауэра pf</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте файл <code>/etc/rc.conf</code> для редактирования:</li>
+                            <div class="code-block">
+                                <pre>
+sudo nano /etc/rc.conf
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Добавьте следующие строки, если их нет:</li>
+                            <div class="code-block">
+                                <pre>
+pf_enable="YES"
+pflog_enable="YES"
+                                </pre>
+                            </div>
+                            <li>Сохраните и закройте файл.</li>
+                            <li>Создайте файл конфигурации <code>/etc/pf.conf</code>, если он не существует:</li>
+                            <div class="code-block">
+                                <pre>
+sudo touch /etc/pf.conf
+                                </pre>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>pf_enable="YES"</code>: Включает брандмауэр pf при запуске системы.</li>
+                            <li><code>pflog_enable="YES"</code>: Включает логирование событий брандмауэра.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Базовая конфигурация pf</button>
+                    <div class="sub-panel">
+                        <p>Настроим базовые правила для брандмауэра, позволяющие входящий SSH-трафик и блокирующие всё
+                            остальное.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте файл <code>/etc/pf.conf</code> для редактирования:</li>
+                            <div class="code-block">
+                                <pre>
+sudo nano /etc/pf.conf
+                                </pre>
+                            </div>
+                            <li>Добавьте следующие строки в файл:</li>
+                            <div class="code-block">
+                                <pre>
+# Интерфейс внешней сети
+ext_if="em0"
+
+# Разрешаем весь трафик на loopback интерфейсе
+set skip on lo0
+
+# Нормализация пакетов
+scrub in all
+
+# Блокируем весь входящий трафик по умолчанию
+block in all
+
+# Разрешаем исходящий трафик
+pass out all keep state
+
+# Разрешаем входящий SSH
+pass in on $ext_if proto tcp from any to ($ext_if) port 22 keep state
+
+# Разрешаем входящие подключения по HTTP и HTTPS
+pass in on $ext_if proto tcp from any to ($ext_if) port {80, 443} keep state
+                                </pre>
+                            </div>
+                            <li>Сохраните и закройте файл.</li>
+                            <li>Проверьте синтаксис конфигурационного файла:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pfctl -n -f /etc/pf.conf
+                                </pre>
+                            </div>
+                            <li>Если ошибок нет, загрузите правила:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pfctl -f /etc/pf.conf
+                                </pre>
+                            </div>
+                            <li>Запустите брандмауэр:</li>
+                            <div class="code-block">
+                                <pre>
+sudo service pf start
+                                </pre>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение конфигурации</h4>
+                        <ul>
+                            <li><code>ext_if="em0"</code>: Определяет внешний сетевой интерфейс.</li>
+                            <li><code>set skip on lo0</code>: Пропускает трафик на интерфейсе loopback
+                                (<code>lo0</code>).</li>
+                            <li><code>scrub in all</code>: Нормализует все входящие пакеты.</li>
+                            <li><code>block in all</code>: Блокирует весь входящий трафик по умолчанию.</li>
+                            <li><code>pass out all keep state</code>: Разрешает весь исходящий трафик, отслеживая
+                                состояния соединений.</li>
+                            <li><code>pass in on $ext_if proto tcp from any to ($ext_if) port 22 keep state</code>:
+                                Разрешает входящие SSH-соединения на порт 22.</li>
+                            <li><code>pass in on $ext_if proto tcp from any to ($ext_if) port {80, 443} keep state</code>:
+                                Разрешает входящие соединения на порты 80 и 443 (HTTP и HTTPS).</li>
+                        </ul>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Замените
+                                <code>em0</code> на название вашего сетевого интерфейса, если оно отличается. Вы можете
+                                узнать его с помощью команды <code>ifconfig</code>. Убедитесь, что вы не блокируете свой
+                                собственный доступ по SSH, иначе вы можете потерять соединение с сервером.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Проверка работы
+                        брандмауэра</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Проверьте статус брандмауэра:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pfctl -s info
+                                </pre>
+                            </div>
+                            <li>Просмотрите загруженные правила:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pfctl -s rules
+                                </pre>
+                            </div>
+                            <li>Просмотрите лог событий брандмауэра:</li>
+                            <div class="code-block">
+                                <pre>
+sudo tcpdump -n -e -ttt -i pflog0
+                                </pre>
+                            </div>
+                            <li>Нажмите <strong>Ctrl + C</strong> для остановки просмотра лога.</li>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>pfctl -s info</code>: Отображает информацию о состоянии брандмауэра.</li>
+                            <li><code>pfctl -s rules</code>: Показывает текущие загруженные правила.</li>
+                            <li><code>tcpdump</code>: Инструмент для перехвата и анализа сетевого трафика.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 4 (новый) -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Дополнительные настройки
+                        брандмауэра</button>
+                    <div class="sub-panel">
+                        <p>В этом подшаге мы рассмотрим дополнительные настройки для усиления безопасности с помощью
+                            <code>pf</code>.
+                        </p>
+
+                        <h4>Ограничение доступа по IP-адресам</h4>
+                        <p>Вы можете ограничить доступ к определённым сервисам по IP-адресам. Например, чтобы разрешить
+                            доступ по SSH только с определённого IP:</p>
+                        <div class="code-block">
+                            <pre>
+# Разрешить SSH только с IP 203.0.113.10
+pass in on $ext_if proto tcp from 203.0.113.10 to ($ext_if) port 22 keep state
+                            </pre>
+                        </div>
+                        <p>Если вам нужно разрешить диапазон IP-адресов:</p>
+                        <div class="code-block">
+                            <pre>
+# Разрешить SSH только с диапазона IP 203.0.113.0/24
+pass in on $ext_if proto tcp from 203.0.113.0/24 to ($ext_if) port 22 keep state
+                            </pre>
+                        </div>
+
+                        <h4>Блокировка вредоносного трафика</h4>
+                        <p>Добавьте правила для блокировки известных вредоносных адресов или портов:</p>
+                        <div class="code-block">
+                            <pre>
+# Блокировать трафик с известного вредоносного IP
+block in quick from 198.51.100.23 to any
+                            </pre>
+                        </div>
+
+                        <h4>Защита от сканирования портов</h4>
+                        <p>Используйте опцию <code>max-src-conn</code> для ограничения количества соединений от одного
+                            источника:</p>
+                        <div class="code-block">
+                            <pre>
+# Ограничить количество одновременных соединений по SSH
+pass in on $ext_if proto tcp from any to ($ext_if) port 22 flags S/SA keep state (max-src-conn 5, max-src-conn-rate 3/30, overload <ssh_abusers>)
+table &lt;ssh_abusers&gt; persist
+block in quick from &lt;ssh_abusers&gt;
+                            </pre>
+                        </div>
+
+                        <h4>Применение изменений</h4>
+                        <p>После внесения изменений в <code>/etc/pf.conf</code> проверьте синтаксис и загрузите правила:
+                        </p>
+                        <div class="code-block">
+                            <pre>
+sudo pfctl -n -f /etc/pf.conf
+sudo pfctl -f /etc/pf.conf
+                            </pre>
+                        </div>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Внимание:</strong> Будьте осторожны при
+                                настройке брандмауэра. Неправильные правила могут заблокировать доступ к серверу.
+                                Рекомендуется иметь физический доступ к серверу или консоль на случай необходимости
+                                восстановления доступа.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Настройка брандмауэра</h3>
+                <ul>
+                    <li>Брандмауэр pf включен и работает.</li>
+                    <li>Базовые правила настроены и загружены.</li>
+                    <li>SSH-доступ разрешен, остальные входящие соединения блокируются.</li>
+                    <li>Дополнительные настройки применены для усиления безопасности.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://www.freebsd.org/doc/handbook/firewalls-pf.html" target="_blank">Руководство по
+                            pf в FreeBSD Handbook</a></li>
+                    <li><a href="https://www.openbsd.org/faq/pf/" target="_blank">FAQ по pf от OpenBSD</a></li>
+                    <li><a href="https://www.freebsd.org/doc/handbook/firewalls.html" target="_blank">FreeBSD Handbook —
+                            Брандмауэры</a></li>
+                </ul>
+            </div>
+
+            <!-- Шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Обновление системы и пакетов</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Регулярное обновление системы и установленных пакетов помогает защитить систему от известных
+                    уязвимостей и обеспечивает стабильность работы.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Обновление базовой
+                        системы</button>
+                    <div class="sub-panel">
+                        <p>Используем <code>freebsd-update</code> для обновления базовой системы.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Проверьте наличие доступных обновлений:</li>
+                            <div class="code-block">
+                                <pre>
+sudo freebsd-update fetch
+                                </pre>
+                            </div>
+                            <li>Если обновления найдены, установите их:</li>
+                            <div class="code-block">
+                                <pre>
+sudo freebsd-update install
+                                </pre>
+                            </div>
+                            <li>Перезагрузите систему, если требуется:</li>
+                            <div class="code-block">
+                                <pre>
+sudo reboot
+                                </pre>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>freebsd-update fetch</code>: Загружает доступные обновления для системы.</li>
+                            <li><code>freebsd-update install</code>: Устанавливает загруженные обновления.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Обновление установленных
+                        пакетов</button>
+                    <div class="sub-panel">
+                        <p>Используем <code>pkg</code> для обновления установленных пакетов и приложений.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Обновите репозитории пакетов:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg update
+                                </pre>
+                            </div>
+                            <li>Обновите все установленные пакеты:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg upgrade
+                                </pre>
+                            </div>
+                            <li>Следуйте инструкциям на экране для завершения процесса обновления.</li>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>pkg update</code>: Обновляет список доступных пакетов в репозиториях.</li>
+                            <li><code>pkg upgrade</code>: Обновляет установленные пакеты до последних версий.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Обновление системы</h3>
+                <ul>
+                    <li>Система и пакеты регулярно обновляются.</li>
+                    <li>Вы понимаете важность обновлений для безопасности.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Управление пользователями и правами
+                доступа</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Ограничение прав доступа и управление пользователями помогает предотвратить несанкционированный
+                    доступ и повышение привилегий.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание пользователей с
+                        ограниченными правами</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте нового пользователя без прав администратора:</li>
+                            <div class="code-block">
+                                <pre>
+sudo adduser
+                                </pre>
+                            </div>
+                            <li>Следуйте инструкциям мастера создания пользователя, задавая имя, пароль и другие
+                                параметры.</li>
+                            <li>Не добавляйте пользователя в группу <code>wheel</code>, если не требуется предоставление
+                                прав суперпользователя.</li>
+                        </ol>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li>Пользователи с ограниченными правами не могут выполнять привилегированные команды, что
+                                повышает безопасность системы.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка прав доступа к файлам и
+                        каталогам</button>
+                    <div class="sub-panel">
+                        <p>Установите корректные права доступа к важным файлам и каталогам.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Проверьте права доступа к файлам конфигурации, например, <code>/etc/passwd</code>:</li>
+                            <div class="code-block">
+                                <pre>
+ls -l /etc/passwd
+                                </pre>
+                            </div>
+                            <li>Убедитесь, что права доступа соответствуют рекомендациям (обычно <code>644</code>):</li>
+                            <div class="code-block">
+                                <pre>
+sudo chmod 644 /etc/passwd
+                                </pre>
+                            </div>
+                            <li>Проверьте владельца и группу файла:</li>
+                            <div class="code-block">
+                                <pre>
+ls -l /etc/passwd
+                                </pre>
+                            </div>
+                            <li>При необходимости измените владельца и группу:</li>
+                            <div class="code-block">
+                                <pre>
+sudo chown root:wheel /etc/passwd
+                                </pre>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>chmod</code>: Изменяет права доступа к файлам и каталогам.</li>
+                            <li><code>chown</code>: Изменяет владельца и группу файла или каталога.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Управление пользователями и правами доступа</h3>
+                <ul>
+                    <li>Созданы пользователи с ограниченными правами.</li>
+                    <li>Права доступа к важным файлам и каталогам корректно настроены.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Защита SSH-доступа</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>SSH — основной способ удалённого доступа к серверу. Защита SSH-сервера помогает предотвратить
+                    несанкционированный доступ.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Изменение порта SSH</button>
+                    <div class="sub-panel">
+                        <p>По умолчанию SSH использует порт <code>22</code>. Изменение порта затруднит
+                            автоматизированные атаки.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте файл конфигурации SSH-сервера:</li>
+                            <div class="code-block">
+                                <pre>
+sudo nano /etc/ssh/sshd_config
+                                </pre>
+                            </div>
+                            <li>Найдите строку <code>#Port 22</code> и раскомментируйте её, удалив символ
+                                <code>#</code>:
+                            </li>
+                            <div class="code-block">
+                                <pre>
+Port 22
+                                </pre>
+                            </div>
+                            <li>Измените номер порта на нестандартный, например, <code>2222</code>:</li>
+                            <div class="code-block">
+                                <pre>
+Port 2222
+                                </pre>
+                            </div>
+                            <li>Сохраните и закройте файл.</li>
+                            <li>Перезапустите SSH-сервер:</li>
+                            <div class="code-block">
+                                <pre>
+sudo service sshd restart
+                                </pre>
+                            </div>
+                            <li>Обновите правила брандмауэра, чтобы разрешить новый порт:</li>
+                            <div class="code-block">
+                                <pre>
+# В /etc/pf.conf
+pass in on $ext_if proto tcp from any to ($ext_if) port 2222 keep state
+                                </pre>
+                            </div>
+                            <li>Загрузите обновленные правила брандмауэра:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pfctl -f /etc/pf.conf
+                                </pre>
+                            </div>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Перед изменением порта
+                                убедитесь, что у вас есть альтернативный способ доступа к серверу или открытый сеанс
+                                SSH, чтобы не потерять доступ.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Отключение входа по
+                        паролю</button>
+                    <div class="sub-panel">
+                        <p>Использование ключей SSH вместо паролей повышает безопасность.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Сгенерируйте пару ключей SSH на вашей локальной машине (если у вас их нет):</li>
+                            <div class="code-block">
+                                <pre>
+ssh-keygen -t rsa -b 4096
+                                </pre>
+                            </div>
+                            <li>Скопируйте публичный ключ на сервер:</li>
+                            <div class="code-block">
+                                <pre>
+ssh-copy-id -p 2222 admin@your_server_ip
+                                </pre>
+                            </div>
+                            <li>Откройте файл конфигурации SSH-сервера:</li>
+                            <div class="code-block">
+                                <pre>
+sudo nano /etc/ssh/sshd_config
+                                </pre>
+                            </div>
+                            <li>Найдите и измените следующие строки:</li>
+                            <div class="code-block">
+                                <pre>
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+                                </pre>
+                            </div>
+                            <li>Сохраните и закройте файл.</li>
+                            <li>Перезапустите SSH-сервер:</li>
+                            <div class="code-block">
+                                <pre>
+sudo service sshd restart
+                                </pre>
+                            </div>
+                            <li>Теперь вход по паролю отключен, и вы можете подключаться только с использованием ключей
+                                SSH.</li>
+                        </ol>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>PasswordAuthentication no</code>: Отключает аутентификацию по паролю.</li>
+                            <li><code>ChallengeResponseAuthentication no</code>: Отключает другие методы аутентификации
+                                по паролю.</li>
+                        </ul>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Убедитесь, что ключи
+                                SSH настроены и работают, прежде чем отключать вход по паролю, чтобы не потерять доступ
+                                к серверу.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Защита SSH-доступа</h3>
+                <ul>
+                    <li>Порт SSH изменен на нестандартный.</li>
+                    <li>Вход по паролю отключен, используются ключи SSH.</li>
+                    <li>Брандмауэр настроен для разрешения нового порта SSH.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 5 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 5: Регулярный аудит безопасности</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Периодический аудит системы помогает выявить потенциальные уязвимости и своевременно принять меры.
+                </p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Использование утилиты
+                        Lynis</button>
+                    <div class="sub-panel">
+                        <p><code>Lynis</code> — это инструмент для аудита безопасности Unix-систем.</p>
+
+                        <p><strong>Установка Lynis:</strong></p>
+                        <ol>
+                            <li>Установите пакет:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg install lynis
+                                </pre>
+                            </div>
+                        </ol>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Запустите аудит системы:</li>
+                            <div class="code-block">
+                                <pre>
+sudo lynis audit system
+                                </pre>
+                            </div>
+                            <li>Дождитесь завершения сканирования и просмотрите отчёт.</li>
+                            <li>Обратите внимание на предупреждения и рекомендации по улучшению безопасности.</li>
+                        </ol>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>lynis audit system</code>: Выполняет полный аудит системы и выводит отчёт.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Регулярный аудит безопасности</h3>
+                <ul>
+                    <li>Периодически выполняется аудит системы с помощью Lynis или аналогичных инструментов.</li>
+                    <li>Вы принимаете меры по устранению обнаруженных уязвимостей.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://cisofy.com/lynis/" target="_blank">Официальный сайт Lynis</a></li>
+                    <li><a href="https://www.freebsd.org/security/" target="_blank">Безопасность в FreeBSD</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="system_monitoring.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу
+                по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../devops/security_practices.html" class="button">Следующий шаг руководства: DevOps: Практики
+                безопасности <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="system_monitoring.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу
+                по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="conclusion.html" class="button">Следующий шаг по роли: Завершение и дальнейшие шаги <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

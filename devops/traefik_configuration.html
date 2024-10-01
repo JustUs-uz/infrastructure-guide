@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Настройка Traefik в Kubernetes | Руководство по DevOps</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item"><a href="infrastructure.html">Подготовка инфраструктуры</a></li>
+            <li class="breadcrumb-item"><a href="containerization.html">Контейнеризация приложений</a></li>
+            <li class="breadcrumb-item"><a href="kubernetes_setup.html">Настройка Kubernetes</a></li>
+            <li class="breadcrumb-item active">Настройка Traefik в Kubernetes</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-directions"></i> Настройка Traefik в Kubernetes</h1>
+        <p><strong>Роль:</strong> DevOps</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Главный шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Установка Traefik с помощью
+                Helm</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Helm — это менеджер пакетов для Kubernetes, который облегчает установку сложных приложений. В этом
+                    шаге мы установим Traefik в качестве Ingress-контроллера в наш Kubernetes-кластер с помощью Helm.
+                </p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Работающий Kubernetes-кластер (Minikube).</li>
+                    <li>Установленный и настроенный kubectl.</li>
+                    <li>Установленный Helm.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Helm</button>
+                    <div class="sub-panel">
+                        <p>На FreeBSD Helm можно установить через пакетный менеджер pkg или скачав бинарный файл.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите Helm через pkg:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg install -y helm
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте версию Helm:</li>
+                            <div class="code-block">
+                                <pre>
+helm version
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Вывод должен содержать информацию о версии Helm.</li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>helm version</code>: Отображает информацию о версии установленного Helm.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Добавление репозитория Helm для
+                        Traefik</button>
+                    <div class="sub-panel">
+                        <p>Добавим официальный репозиторий чарта Traefik в Helm.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Добавьте репозиторий Traefik:</li>
+                            <div class="code-block">
+                                <pre>
+helm repo add traefik https://helm.traefik.io/traefik
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Обновите локальный кэш репозиториев Helm:</li>
+                            <div class="code-block">
+                                <pre>
+helm repo update
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>helm repo add</code>: Добавляет новый репозиторий чарта.</li>
+                            <li><code>helm repo update</code>: Обновляет информацию о доступных чартах.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Traefik в
+                        кластер</button>
+                    <div class="sub-panel">
+                        <p>Установим Traefik в наш Kubernetes-кластер с помощью команды <code>helm install</code>.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте пространство имён (namespace) для Traefik:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl create namespace traefik
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Установите Traefik с помощью Helm:</li>
+                            <div class="code-block">
+                                <pre>
+helm install traefik traefik/traefik --namespace=traefik
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте установленные релизы Helm:</li>
+                            <div class="code-block">
+                                <pre>
+helm list -n traefik
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте запущенные поды в пространстве имён Traefik:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl get pods -n traefik
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>kubectl create namespace</code>: Создаёт новое пространство имён в Kubernetes.
+                            </li>
+                            <li><code>helm install</code>: Устанавливает чарт в кластер.</li>
+                            <li><code>helm list -n traefik</code>: Отображает установленные релизы в указанном
+                                пространстве имён.</li>
+                        </ul>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Примечание:</strong> Установка Traefik
+                                с помощью Helm по умолчанию создаст Ingress-контроллер, готовый к использованию.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка установки Traefik</h3>
+                <ul>
+                    <li>Helm установлен и работает корректно.</li>
+                    <li>Репозиторий Traefik добавлен в Helm.</li>
+                    <li>Traefik установлен в Kubernetes-кластер и поды работают.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://helm.sh/docs/" target="_blank">Официальная документация Helm</a></li>
+                    <li><a href="https://doc.traefik.io/traefik/" target="_blank">Официальная документация Traefik</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Настройка приложения для работы с
+                Traefik</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>В этом шаге мы настроим наше приложение для работы с Traefik, используя ресурсы Ingress для
+                    маршрутизации трафика.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание Deployment и Service для
+                        приложения</button>
+                    <div class="sub-panel">
+                        <p>Создадим новое приложение и настроим его для работы с Traefik.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите в директорию с манифестами Kubernetes:</li>
+                            <div class="code-block">
+                                <pre>
+cd ~/k8s
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте файл <code>app-deployment.yaml</code>:</li>
+                            <div class="code-block">
+                                <pre>
+nano app-deployment.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте следующий контент в файл:</li>
+                            <div class="code-block">
+                                <pre>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: hashicorp/http-echo
+        args:
+          - "-text=Hello from Kubernetes!"
+        ports:
+        - containerPort: 5678
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение манифеста Deployment</h4>
+                            <ul>
+                                <li><code>image: hashicorp/http-echo</code>: Используем простой образ, который
+                                    возвращает заданный текст.</li>
+                                <li><code>args</code>: Передаём аргументы для контейнера, задавая текст ответа.</li>
+                                <li><code>containerPort: 5678</code>: Указываем порт, на котором работает контейнер.
+                                </li>
+                            </ul>
+
+                            <li>Сохраните файл и выйдите из редактора.</li>
+
+                            <li>Создайте файл <code>app-service.yaml</code>:</li>
+                            <div class="code-block">
+                                <pre>
+nano app-service.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <li>Добавьте следующий контент в файл:</li>
+                            <div class="code-block">
+                                <pre>
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  selector:
+    app: myapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5678
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение манифеста Service</h4>
+                            <ul>
+                                <li><code>port: 80</code>: Порт, на котором сервис будет доступен.</li>
+                                <li><code>targetPort: 5678</code>: Порт, на который сервис будет перенаправлять трафик
+                                    внутри контейнера.</li>
+                            </ul>
+
+                            <li>Сохраните файл и выйдите из редактора.</li>
+
+                            <li>Примените манифесты Deployment и Service:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl apply -f app-deployment.yaml
+kubectl apply -f app-service.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <li>Проверьте созданные ресурсы:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl get deployments
+kubectl get services
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание Ingress для
+                        приложения</button>
+                    <div class="sub-panel">
+                        <p>Создадим ресурс Ingress для маршрутизации трафика к нашему приложению через Traefik.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>app-ingress.yaml</code>:</li>
+                            <div class="code-block">
+                                <pre>
+nano app-ingress.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <li>Добавьте следующий контент в файл:</li>
+                            <div class="code-block">
+                                <pre>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: myapp.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp-service
+            port:
+              number: 80
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение манифеста Ingress</h4>
+                            <ul>
+                                <li><code>annotations</code>: Указываем, что данный Ingress должен обрабатывать Traefik.
+                                </li>
+                                <li><code>host: myapp.local</code>: Доменное имя, по которому будет доступно приложение.
+                                </li>
+                                <li><code>path: /</code>: Путь, который будет обрабатываться.</li>
+                                <li><code>backend</code>: Сервис, на который будет направлен трафик.</li>
+                            </ul>
+
+                            <li>Сохраните файл и выйдите из редактора.</li>
+
+                            <li>Примените манифест Ingress:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl apply -f app-ingress.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <li>Проверьте созданные ресурсы Ingress:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl get ingress
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-info-circle"></i> Примечание:</strong> Для тестирования вы
+                                можете добавить запись в файл <code>/etc/hosts</code> на вашей хостовой машине, чтобы
+                                связать <code>myapp.local</code> с IP-адресом Minikube.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Тестирование доступа к приложению
+                        через Traefik</button>
+                    <div class="sub-panel">
+                        <p>Проверим, что наше приложение доступно через Traefik по указанному доменному имени.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Получите IP-адрес Minikube:</li>
+                            <div class="code-block">
+                                <pre>
+minikube ip
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <li>На хостовой машине (Windows 11) откройте файл
+                                <code>C:\Windows\System32\drivers\etc\hosts</code> в текстовом редакторе от имени
+                                администратора.
+                            </li>
+
+                            <li>Добавьте строку в конец файла, заменив <code>MINIKUBE_IP</code> на IP-адрес Minikube:
+                            </li>
+                            <div class="code-block">
+                                <pre>
+MINIKUBE_IP    myapp.local
+                                </pre>
+                            </div>
+
+                            <li>Сохраните файл <code>hosts</code>.</li>
+
+                            <li>Откройте веб-браузер и перейдите по адресу <code>http://myapp.local</code>.</li>
+
+                            <li>Вы должны увидеть сообщение <code>Hello from Kubernetes!</code>.</li>
+                        </ol>
+
+                        <details>
+                            <summary><strong>Проблемы с доступом к приложению</strong></summary>
+                            <p><strong>Решение:</strong></p>
+                            <ul>
+                                <li>Проверьте, что все ресурсы (Deployment, Service, Ingress) созданы и работают.</li>
+                                <li>Убедитесь, что запись в файле <code>hosts</code> корректна.</li>
+                                <li>Проверьте логи Traefik для обнаружения возможных ошибок:</li>
+                                <div class="code-block">
+                                    <pre>
+kubectl logs -n traefik $(kubectl get pods -n traefik -l app.kubernetes.io/name=traefik -o jsonpath="{.items[0].metadata.name}")
+                                    </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка работы приложения через Traefik</h3>
+                <ul>
+                    <li>Приложение доступно по указанному доменному имени через Traefik.</li>
+                    <li>Ingress корректно настроен и работает.</li>
+                    <li>Traefik маршрутизирует трафик к приложению.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Настройка HTTPS с Let's
+                Encrypt</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Traefik поддерживает автоматическое получение SSL-сертификатов от Let's Encrypt. В этом шаге мы
+                    настроим HTTPS для нашего приложения.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Обновление конфигурации
+                        Traefik</button>
+                    <div class="sub-panel">
+                        <p>Обновим конфигурацию Traefik, чтобы включить поддержку Let's Encrypt.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл значений для Helm (<code>traefik-values.yaml</code>):</li>
+                            <div class="code-block">
+                                <pre>
+nano traefik-values.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <li>Добавьте следующий контент в файл:</li>
+                            <div class="code-block">
+                                <pre>
+additionalArguments:
+  - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+  - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=http"
+  - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
+  - "--certificatesresolvers.myresolver.acme.storage=/data/acme.json"
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение конфигурации</h4>
+                            <ul>
+                                <li><code>certificatesresolvers</code>: Настройка резолвера сертификатов Let's Encrypt.
+                                </li>
+                                <li><code>acme.httpchallenge</code>: Используем HTTP Challenge для проверки домена.</li>
+                                <li><code>email</code>: Ваш email для регистрации в Let's Encrypt.</li>
+                                <li><code>storage</code>: Путь для хранения сертификатов.</li>
+                            </ul>
+
+                            <li>Сохраните файл и выйдите из редактора.</li>
+
+                            <li>Обновите установку Traefik с новыми значениями:</li>
+                            <div class="code-block">
+                                <pre>
+helm upgrade traefik traefik/traefik --namespace=traefik -f traefik-values.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Для получения
+                                сертификатов от Let's Encrypt необходимо иметь действующий домен, доступный из
+                                интернета.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Обновление Ingress для поддержки
+                        HTTPS</button>
+                    <div class="sub-panel">
+                        <p>Обновим ресурс Ingress, чтобы использовать TLS и автоматическое получение сертификатов.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте файл <code>app-ingress.yaml</code> для редактирования:</li>
+                            <div class="code-block">
+                                <pre>
+nano app-ingress.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <li>Добавьте или обновите разделы следующим образом:</li>
+                            <div class="code-block">
+                                <pre>
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
+    traefik.ingress.kubernetes.io/router.tls.certresolver: myresolver
+spec:
+  rules:
+  - host: yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: myapp-service
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - yourdomain.com
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <li>Замените <code>yourdomain.com</code> на ваше действительное доменное имя.</li>
+
+                            <li>Сохраните файл и выйдите из редактора.</li>
+
+                            <li>Примените обновлённый манифест:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl apply -f app-ingress.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <li>Проверьте статус сертификата в логе Traefik:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl logs -n traefik $(kubectl get pods -n traefik -l app.kubernetes.io/name=traefik -o jsonpath="{.items[0].metadata.name}")
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-info-circle"></i> Примечание:</strong> Процесс получения
+                                сертификата может занять некоторое время. Убедитесь, что ваше приложение доступно из
+                                интернета по указанному домену.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Тестирование доступа к приложению
+                        по HTTPS</button>
+                    <div class="sub-panel">
+                        <p>Проверим, что наше приложение доступно по HTTPS с действительным сертификатом.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте веб-браузер и перейдите по адресу <code>https://yourdomain.com</code>.</li>
+
+                            <li>Вы должны увидеть сообщение <code>Hello from Kubernetes!</code>, а в адресной строке
+                                браузера сертификат должен быть отмечен как действительный.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка настройки HTTPS</h3>
+                <ul>
+                    <li>Traefik настроен для работы с Let's Encrypt.</li>
+                    <li>Сертификат успешно получен и используется.</li>
+                    <li>Приложение доступно по HTTPS с действительным сертификатом.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Продолжение изучения Traefik в
+                Kubernetes</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Вы успешно настроили Traefik в Kubernetes для маршрутизации трафика и обеспечения безопасности с
+                    помощью HTTPS. Рекомендуем продолжить изучение:</p>
+
+                <ul>
+                    <li>Изучите возможности Traefik Middleware для обработки запросов.</li>
+                    <li>Настройте мониторинг и логирование Traefik.</li>
+                    <li>Изучите работу с различными стратегиями балансировки нагрузки.</li>
+                    <li>Рассмотрите использование Traefik в производственных кластерах Kubernetes.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://doc.traefik.io/traefik/middlewares/overview/" target="_blank">Traefik
+                            Middleware</a></li>
+                    <li><a href="https://doc.traefik.io/traefik/operations/logging/" target="_blank">Логирование в
+                            Traefik</a></li>
+                    <li><a href="https://kubernetes.io/ru/docs/concepts/cluster-administration/monitoring/"
+                            target="_blank">Мониторинг в Kubernetes</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../devops/kubernetes_setup.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../devops/ci_cd_pipeline.html" class="button">Следующий шаг руководства: DevOps: Настройка CI/CD
+                пайплайна <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="../devops/containerization.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="ci_cd_pipeline.html" class="button">Следующий шаг по роли: Настройка CI/CD пайплайна <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

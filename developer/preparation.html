@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Подготовка среды разработки | Руководство для разработчика</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            Роль: Разработчик
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item active">Подготовка среды разработки</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-laptop-code"></i> Подготовка среды разработки</h1>
+        <p><strong>Роль:</strong> Разработчик</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Страница 1: Подготовка среды разработки -->
+            <!-- Главный шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Установка Visual Studio Code и
+                плагинов</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>В этом шаге мы установим Visual Studio Code (VS Code) и необходимые плагины для разработки нашего
+                    проекта.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Доступ к интернету.</li>
+                    <li>Операционная система Windows 11 Home Edition.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Скачивание и установка Visual
+                        Studio Code</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите на официальный сайт Visual Studio Code: <a
+                                    href="https://code.visualstudio.com/"
+                                    target="_blank">https://code.visualstudio.com/</a></li>
+                            <li>Нажмите кнопку <strong>Download for Windows</strong>.</li>
+                            <li>Скачайте установочный файл для Windows (User Installer) 64-bit.</li>
+                            <li>После скачивания запустите установочный файл.</li>
+                            <li>Следуйте инструкциям установщика, отметив опцию «Добавить в PATH», если такая есть.</li>
+                            <li>По завершении установки запустите Visual Studio Code.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка необходимых
+                        плагинов</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <p>Для удобной работы с проектом нам потребуются следующие плагины:</p>
+                        <ul>
+                            <li><strong>ESLint</strong> - проверка кода на ошибки и стиль.</li>
+                            <li><strong>Prettier</strong> - автоматическое форматирование кода.</li>
+                            <li><strong>Pug</strong> - поддержка синтаксиса Pug.</li>
+                            <li><strong>Sass</strong> - поддержка синтаксиса Sass/SCSS.</li>
+                            <li><strong>GitLens</strong> - интеграция с Git.</li>
+                            <li><strong>Live Server</strong> - запуск локального сервера для предпросмотра.</li>
+                        </ul>
+                        <p><strong>Установка плагинов:</strong></p>
+                        <ol>
+                            <li>Откройте VS Code.</li>
+                            <li>Нажмите на иконку расширений на левой панели (иконка в виде квадрата).</li>
+                            <li>В поле поиска введите название плагина, например, <strong>ESLint</strong>.</li>
+                            <li>Найдите нужный плагин в результатах поиска и нажмите кнопку <strong>Install</strong>.
+                            </li>
+                            <li>Повторите шаги 3-4 для каждого плагина из списка.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка успешной установки VS Code и плагинов</h3>
+                <ul>
+                    <li>Visual Studio Code установлен и запускается без ошибок.</li>
+                    <li>Все необходимые плагины установлены и активированы.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://code.visualstudio.com/docs" target="_blank">Документация Visual Studio Code</a>
+                    </li>
+                    <li><a href="https://marketplace.visualstudio.com/" target="_blank">Marketplace расширений VS
+                            Code</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Установка Node.js и менеджера
+                пакетов</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Node.js необходим для работы с JavaScript на стороне сервера и для использования различных
+                    инструментов разработки.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Установленный Visual Studio Code.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Скачивание и установка
+                        Node.js</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите на официальный сайт Node.js: <a href="https://nodejs.org/"
+                                    target="_blank">https://nodejs.org/</a></li>
+                            <li>Скачайте рекомендованную версию LTS (Long Term Support) для Windows (64-bit).</li>
+                            <li>Запустите установочный файл и следуйте инструкциям установщика.</li>
+                            <li>В процессе установки отметьте опцию «Добавить в PATH», если она доступна.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Проверка установки Node.js и
+                        npm</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте командную строку Windows (нажмите Win+R, введите <code>cmd</code>, нажмите
+                                Enter).</li>
+                            <li>Введите команду для проверки версии Node.js:</li>
+                            <div class="code-block">
+                                <pre>
+node -v
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Введите команду для проверки версии npm:</li>
+                            <div class="code-block">
+                                <pre>
+npm -v
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Если версии отображаются без ошибок, установка прошла успешно.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка установки Node.js и npm</h3>
+                <ul>
+                    <li>Команда <code>node -v</code> отображает версию Node.js.</li>
+                    <li>Команда <code>npm -v</code> отображает версию npm.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://nodejs.org/en/docs/" target="_blank">Документация Node.js</a></li>
+                    <li><a href="https://docs.npmjs.com/" target="_blank">Документация npm</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Инициализация проекта и установка
+                зависимостей</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Создадим структуру проекта, установим необходимые инструменты и загрузим проект на GitHub.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Установленные Node.js и npm.</li>
+                    <li>Установленный Git.</li>
+                    <li>Аккаунт на GitHub.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Git (если не
+                        установлен)</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите на официальный сайт Git: <a href="https://git-scm.com/download/win"
+                                    target="_blank">https://git-scm.com/download/win</a></li>
+                            <li>Скачайте установщик для Windows и запустите его.</li>
+                            <li>Следуйте инструкциям установщика, оставив настройки по умолчанию.</li>
+                            <li>После установки перезагрузите командную строку, если она была открыта.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание проекта и его
+                        структуры</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте командную строку или PowerShell.</li>
+                            <li>Перейдите в директорию, где вы хотите создать проект.</li>
+                            <li>Создайте папку проекта и перейдите в неё:</li>
+                            <div class="code-block">
+                                <pre>
+mkdir my-project
+cd my-project
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Инициализируйте Git-репозиторий:</li>
+                            <div class="code-block">
+                                <pre>
+git init
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте файл <code>README.md</code> с описанием проекта.</li>
+                            <div class="code-block">
+                                <pre>
+echo "# My Project" > README.md
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте файл <code>.gitignore</code> и добавьте туда следующие строки:</li>
+                            <div class="code-block">
+                                <pre>
+node_modules/
+dist/
+.env
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Инициализируйте npm-проект:</li>
+                            <div class="code-block">
+                                <pre>
+npm init -y
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте структуру папок проекта согласно схеме:</li>
+                            <div class="code-block">
+                                <pre>
+mkdir docker
+mkdir kubernetes
+mkdir src
+mkdir src/client
+mkdir src/server
+mkdir src/server/routes
+mkdir src/server/models
+mkdir public
+mkdir public/css
+mkdir public/js
+mkdir public/images
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Структура проекта:</p>
+                            <div class="code-block">
+                                <pre>
+my-project/
+├── docker/
+├── kubernetes/
+├── src/
+│   ├── client/
+│   ├── server/
+│       ├── routes/
+│       └── models/
+├── public/
+│   ├── css/
+│   ├── js/
+│   └── images/
+├── .gitignore
+├── package.json
+├── README.md
+                                </pre>
+                            </div>
+                            <li>Добавьте все файлы в Git и сделайте первый коммит:</li>
+                            <div class="code-block">
+                                <pre>
+git add .
+git commit -m "Initial commit"
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание репозитория на GitHub и
+                        загрузка проекта</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите на GitHub и войдите в свой аккаунт.</li>
+                            <li>Нажмите на кнопку <strong>New</strong> для создания нового репозитория.</li>
+                            <li>Введите имя репозитория (например, <code>my-project</code>), добавьте описание и
+                                установите его как <strong>Private</strong> или <strong>Public</strong>.</li>
+                            <li>Не создавайте <code>README.md</code>, <code>.gitignore</code> или лицензию — они у нас
+                                уже есть.</li>
+                            <li>Нажмите на кнопку <strong>Create repository</strong>.</li>
+                            <li>В разделе «…or push an existing repository from the command line» скопируйте команды:
+                            </li>
+                            <div class="code-block">
+                                <pre>
+git remote add origin https://github.com/yourusername/my-project.git
+git branch -M main
+git push -u origin main
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Замените <code>yourusername</code> на ваше имя пользователя на GitHub.</p>
+                            <li>Вставьте эти команды в командную строку и выполните их.</li>
+                            <li>При запросе введите ваши учетные данные GitHub или настройте SSH-ключи для
+                                аутентификации.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 4 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка необходимых пакетов и
+                        инструментов</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите пакеты как зависимости разработчика:</li>
+                            <div class="code-block">
+                                <pre>
+npm install --save-dev typescript gulp gulp-pug gulp-sass sass gulp-typescript
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Установите необходимые пакеты как зависимости:</li>
+                            <div class="code-block">
+                                <pre>
+npm install express
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Обновите файл <code>package.json</code> с необходимыми скриптами:</li>
+                            <div class="code-block">
+                                <pre>
+"scripts": {
+    "build": "gulp",
+    "start": "node dist/server/index.js"
+},
+                                </pre>
+                            </div>
+                            <li>Инициализируйте TypeScript, создав файл <code>tsconfig.json</code>:</li>
+                            <div class="code-block">
+                                <pre>
+npx tsc --init
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте файл <code>gulpfile.js</code> с задачами для компиляции Pug, Sass и TypeScript.
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка инициализации проекта</h3>
+                <ul>
+                    <li>Структура проекта создана согласно схеме.</li>
+                    <li>Проект инициализирован как Git-репозиторий.</li>
+                    <li>Проект загружен на GitHub.</li>
+                    <li>Установлены все необходимые пакеты и инструменты.</li>
+                </ul>
+
+                <h3>Дополнительная информация</h3>
+                <p>В этом проекте мы будем использовать <strong>Pug</strong>, <strong>Sass</strong> и
+                    <strong>Gulp</strong> для облегчения разработки фронтенда и автоматизации задач. Подробная настройка
+                    и использование этих инструментов описаны в разделе <a href="work_with_code.html">"Работа с
+                        кодом"</a>.</p>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://git-scm.com/doc" target="_blank">Документация Git</a></li>
+                    <li><a href="https://docs.github.com/en/get-started" target="_blank">Руководство по GitHub</a></li>
+                    <li><a href="https://www.typescriptlang.org/docs/" target="_blank">Документация TypeScript</a></li>
+                    <li><a href="https://gulpjs.com/docs/en/getting-started/quick-start" target="_blank">Документация
+                            Gulp</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../admin/network_configuration.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../devops/containerization.html" class="button">Следующий шаг руководства: DevOps: Контейнеризация
+                и оркестрация <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="introduction.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу по
+                роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="work_with_code.html" class="button">Следующий шаг по роли: Работа с кодом <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

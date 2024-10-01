@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CI/CD для разработчиков | Руководство для разработчика</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="preparation.html">Подготовка среды разработки</a></li>
+            <li class="breadcrumb-item"><a href="work_with_code.html">Работа с кодом</a></li>
+            <li class="breadcrumb-item active">CI/CD для разработчиков</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-cogs"></i> CI/CD для разработчиков</h1>
+        <p><strong>Роль:</strong> Разработчик</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Главный шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Понимание основ CI/CD</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>В этом шаге мы рассмотрим основы CI/CD (Continuous Integration/Continuous Deployment) и почему они
+                    важны в процессе разработки.</p>
+
+                <h3>Что такое CI/CD?</h3>
+                <ul>
+                    <li><strong>CI (Continuous Integration)</strong>: Постоянная интеграция кода. Разработчики часто
+                        объединяют свои изменения с общей веткой, что позволяет обнаруживать и исправлять конфликты на
+                        ранних стадиях.</li>
+                    <li><strong>CD (Continuous Deployment)</strong>: Постоянное развертывание. Автоматизация процесса
+                        развертывания приложения в различные среды (тестирование, производство) после прохождения тестов
+                        и проверок.</li>
+                </ul>
+
+                <h3>Преимущества использования CI/CD</h3>
+                <ul>
+                    <li>Быстрое обнаружение ошибок.</li>
+                    <li>Автоматизация рутинных задач.</li>
+                    <li>Улучшение качества кода.</li>
+                    <li>Быстрое развертывание новых функций.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://ru.wikipedia.org/wiki/CI/CD" target="_blank">Статья о CI/CD в Википедии</a>
+                    </li>
+                    <li><a href="https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment"
+                            target="_blank">Разница между CI, CD и CD</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Выбор CI/CD инструмента (GitHub
+                Actions)</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Мы будем использовать GitHub Actions для реализации CI/CD в нашем проекте.</p>
+
+                <h3>Почему GitHub Actions?</h3>
+                <ul>
+                    <li>Глубокая интеграция с GitHub.</li>
+                    <li>Бесплатно для публичных репозиториев.</li>
+                    <li>Большое сообщество и множество готовых действий (actions).</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://docs.github.com/en/actions" target="_blank">Документация GitHub Actions</a>
+                    </li>
+                    <li><a href="https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions"
+                            target="_blank">Понимание GitHub Actions</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Настройка рабочего процесса CI</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Создадим файл рабочего процесса для автоматической сборки и тестирования нашего проекта при каждом
+                    пуше или пул-реквесте.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Репозиторий проекта загружен на GitHub.</li>
+                    <li>Понимание основ YAML-файлов.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Создание папки для GitHub Actions -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание папки для рабочих
+                        процессов</button>
+                    <div class="sub-panel">
+                        <p>GitHub ищет файлы рабочих процессов в директории <code>.github/workflows/</code>.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите в корневую директорию вашего проекта.</li>
+                            <li>Создайте папку <code>.github/workflows</code>:</li>
+                            <div class="code-block">
+                                <pre>
+    mkdir -p .github/workflows
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Создание файла рабочего процесса -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание файла ci.yml</button>
+                    <div class="sub-panel">
+                        <p>Создадим файл рабочего процесса под названием <code>ci.yml</code>.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>.github/workflows/ci.yml</code>.</li>
+                            <li>Добавьте следующий код:</li>
+                            <div class="code-block">
+                                <pre>
+    name: CI
+
+    on:
+      push:
+        branches: [ main ]
+      pull_request:
+        branches: [ main ]
+
+    jobs:
+      build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v3
+
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '14'
+
+        - name: Install dependencies
+          run: npm install
+
+        - name: Build project
+          run: npm run build
+
+        - name: Run tests
+          run: npm test
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение ci.yml</h4>
+                            <ul>
+                                <li><code>name</code>: Имя рабочего процесса.</li>
+                                <li><code>on</code>: События, при которых запускается рабочий процесс (push и
+                                    pull_request в ветку main).</li>
+                                <li><code>jobs</code>: Определение задач.</li>
+                                <li><code>runs-on</code>: Операционная система для выполнения задач (ubuntu-latest).
+                                </li>
+                                <li><code>steps</code>: Шаги, которые будут выполнены.</li>
+                                <li>Используем действия для проверки кода, установки Node.js, установки зависимостей,
+                                    сборки проекта и запуска тестов.</li>
+                            </ul>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка настройки CI</h3>
+                <ul>
+                    <li>Файл <code>ci.yml</code> создан и находится в правильной директории.</li>
+                    <li>Синтаксис YAML-файла корректен.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://docs.github.com/en/actions/quickstart" target="_blank">Быстрый старт с GitHub
+                            Actions</a></li>
+                    <li><a href="https://yaml.org/" target="_blank">Документация по YAML</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Настройка автоматического развертывания
+                (CD)</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Настроим автоматическое развертывание приложения на сервер или облачный сервис после успешной сборки
+                    и тестирования.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Доступ к серверу или облачному сервису для развертывания.</li>
+                    <li>Настроенные учетные данные для аутентификации.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Определение способа развертывания -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Выбор способа
+                        развертывания</button>
+                    <div class="sub-panel">
+                        <p>Существует множество способов развертывания приложения:</p>
+                        <ul>
+                            <li>Развертывание на VPS с помощью SSH и SCP.</li>
+                            <li>Использование облачных сервисов (Heroku, AWS, Azure, GCP).</li>
+                            <li>Развертывание в контейнерах Docker.</li>
+                            <li>Использование Kubernetes для оркестрации.</li>
+                        </ul>
+
+                        <p><strong>Для примера мы будем использовать Heroku.</strong></p>
+                    </div>
+
+                    <!-- Подшаг 2: Настройка развертывания на Heroku -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка развертывания на
+                        Heroku</button>
+                    <div class="sub-panel">
+                        <h4>1. Создание аккаунта на Heroku</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите на сайт <a href="https://www.heroku.com/" target="_blank">Heroku</a> и
+                                зарегистрируйтесь.</li>
+                        </ol>
+
+                        <h4>2. Установка Heroku CLI</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Скачайте и установите Heroku CLI с сайта: <a
+                                    href="https://devcenter.heroku.com/articles/heroku-cli" target="_blank">Heroku
+                                    CLI</a>.</li>
+                            <li>Проверьте установку командой:</li>
+                            <div class="code-block">
+                                <pre>
+    heroku --version
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>3. Логин в Heroku CLI</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Выполните команду для входа:</li>
+                            <div class="code-block">
+                                <pre>
+    heroku login
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Следуйте инструкциям для авторизации.</li>
+                        </ol>
+
+                        <h4>4. Создание приложения на Heroku</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>В корневой директории проекта выполните команду:</li>
+                            <div class="code-block">
+                                <pre>
+    heroku create your-app-name
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Замените <code>your-app-name</code> на уникальное имя вашего приложения.</p>
+                        </ol>
+
+                        <h4>5. Добавление Heroku API Key в GitHub Secrets</h4>
+                        <p>Для аутентификации в Heroku из GitHub Actions нам потребуется API Key.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Получите API Key, выполнив команду:</li>
+                            <div class="code-block">
+                                <pre>
+    heroku auth:token
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Скопируйте полученный токен.</li>
+                            <li>Перейдите в настройки вашего репозитория на GitHub.</li>
+                            <li>Выберите <strong>Settings</strong> &rarr; <strong>Secrets</strong> &rarr;
+                                <strong>Actions</strong>.
+                            </li>
+                            <li>Нажмите <strong>New repository secret</strong>.</li>
+                            <li>Добавьте секрет с именем <code>HEROKU_API_KEY</code> и значением вашего токена.</li>
+                        </ol>
+
+                        <h4>6. Обновление файла ci.yml для развертывания</h4>
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте файл <code>.github/workflows/ci.yml</code>.</li>
+                            <li>Добавьте следующий код в конец файла:</li>
+                            <div class="code-block">
+                                <pre>
+        - name: Deploy to Heroku
+          uses: akhileshns/heroku-deploy@v3.12.12
+          with:
+            heroku_api_key: \${{ secrets.HEROKU_API_KEY }}
+            heroku_app_name: your-app-name
+            heroku_email: your-email@example.com
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Замените <code>your-app-name</code> на имя вашего приложения, а
+                                <code>your-email@example.com</code> на вашу электронную почту в Heroku.
+                            </p>
+                        </ol>
+
+                        <h4>Объяснение изменений</h4>
+                        <ul>
+                            <li>Используем действие <code>akhileshns/heroku-deploy</code> для развертывания приложения
+                                на Heroku.</li>
+                            <li>Передаём необходимые параметры для аутентификации и указания приложения.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка настройки CD</h3>
+                <ul>
+                    <li>Приложение создано на Heroku.</li>
+                    <li>Heroku API Key добавлен в GitHub Secrets.</li>
+                    <li>Файл <code>ci.yml</code> обновлён для развертывания.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs"
+                            target="_blank">Начало работы с Heroku и Node.js</a></li>
+                    <li><a href="https://github.com/AkhileshNS/heroku-deploy" target="_blank">Heroku Deploy GitHub
+                            Action</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 5 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 5: Тестирование CI/CD процесса</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Проверим, как работает наш CI/CD процесс, сделав изменения в коде и отправив их на GitHub.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1: Внесение изменений и пуш в репозиторий -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Внесение изменений в код</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте файл <code>src/client/index.pug</code> и измените заголовок:</li>
+                            <div class="code-block">
+                                <pre>
+    h1 Новое приложение
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Сохраните изменения.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2: Коммит и пуш изменений -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Коммит и пуш изменений</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Добавьте изменения в Git:</li>
+                            <div class="code-block">
+                                <pre>
+    git add .
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Сделайте коммит:</li>
+                            <div class="code-block">
+                                <pre>
+    git commit -m "Updated header in index.pug"
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Отправьте изменения на GitHub:</li>
+                            <div class="code-block">
+                                <pre>
+    git push origin main
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 3: Мониторинг процесса CI/CD -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Мониторинг рабочего
+                        процесса</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите на страницу вашего репозитория на GitHub.</li>
+                            <li>Нажмите на вкладку <strong>Actions</strong>.</li>
+                            <li>Вы увидите запущенный рабочий процесс. Нажмите на него для просмотра деталей.</li>
+                            <li>Дождитесь завершения всех шагов.</li>
+                            <li>Если все прошло успешно, перейдите на ваш Heroku URL и убедитесь, что изменения
+                                отображаются.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка CI/CD процесса</h3>
+                <ul>
+                    <li>Рабочий процесс на GitHub Actions завершился успешно.</li>
+                    <li>Приложение на Heroku обновилось с последними изменениями.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 6 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 6: Продолжение работы с CI/CD</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Теперь, когда у вас настроен базовый процесс CI/CD, вы можете продолжать его улучшать:</p>
+
+                <ul>
+                    <li>Добавьте автоматическое выполнение тестов.</li>
+                    <li>Настройте уведомления о статусе сборок.</li>
+                    <li>Разверните проект в других средах (тестирование, стадия, производство).</li>
+                    <li>Изучите возможности Docker и Kubernetes для контейнеризации и оркестрации.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://docs.github.com/en/actions/guides/about-continuous-integration"
+                            target="_blank">О непрерывной интеграции в GitHub Actions</a></li>
+                    <li><a href="https://www.docker.com/" target="_blank">Docker</a></li>
+                    <li><a href="https://kubernetes.io/ru/" target="_blank">Kubernetes</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../devops/ci_cd_pipeline.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему
+                шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../devops/monitoring_logging.html" class="button">Следующий шаг руководства: DevOps: Мониторинг и
+                логирование <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="../developer/work_with_code.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="docker_kubernetes.html" class="button">Следующий шаг по роли: Docker и Kubernetes <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

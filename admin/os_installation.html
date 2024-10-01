@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Установка и настройка операционной системы | Руководство для администратора</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item active">Установка и настройка ОС</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-server"></i> Установка и настройка операционной системы</h1>
+        <p><strong>Роль:</strong> Администратор</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Активирование Hyper-V на Windows 11
+                Home Edition</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>Hyper-V по умолчанию недоступен на Windows 11 Home Edition, но его можно активировать с помощью
+                    следующих действий.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Включённая виртуализация на уровне BIOS (<em>Intel VT-x</em> или <em>AMD-V</em>).</li>
+                    <li>Windows 11 Home Edition.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Включение виртуализации в
+                        BIOS</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перезагрузите компьютер и войдите в настройки BIOS/UEFI.</li>
+                            <li>Найдите настройку виртуализации:
+                                <ul>
+                                    <li><strong>Для Intel:</strong> VT-x, Intel Virtualization Technology.</li>
+                                    <li><strong>Для AMD:</strong> AMD-V, SVM Mode.</li>
+                                </ul>
+                            </li>
+                            <li>Включите виртуализацию и сохраните изменения.</li>
+                            <li>Перезагрузите компьютер.</li>
+                        </ol>
+                        <p><em>Примечание:</em> Доступ к BIOS/UEFI обычно осуществляется при загрузке компьютера с
+                            помощью нажатия клавиш <strong>F2</strong>, <strong>Del</strong> или других, в зависимости
+                            от модели вашей материнской платы.</p>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Открытие PowerShell от имени
+                        администратора</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Нажмите сочетание клавиш <strong>Win + X</strong> на клавиатуре.</li>
+                            <li>В открывшемся меню выберите <strong>Windows PowerShell (администратор)</strong> или
+                                <strong>Terminal (администратор)</strong>.
+                            </li>
+                            <li>Подтвердите запрос контроля учётных записей, нажав <strong>Да</strong>.</li>
+                        </ol>
+                        <p>Теперь PowerShell открыт с правами администратора.</p>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Активирование Hyper-V через
+                        PowerShell</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>В окне PowerShell выполните следующую команду:</li>
+                            <div class="code-block">
+                                <pre>
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Дождитесь завершения процесса установки компонентов.</li>
+                            <li>Когда будет предложено перезагрузить компьютер, введите <strong>Y</strong> и нажмите
+                                <strong>Enter</strong>.
+                            </li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Возможные проблемы:</strong></p>
+                        </div>
+
+                        <details>
+                            <summary><strong>Ошибка:</strong> "Не удалось найти указанную функцию".</summary>
+                            <p><strong>Решение:</strong> Убедитесь, что команда введена правильно и что виртуализация
+                                включена в BIOS. Также проверьте, что вы запускаете PowerShell от имени администратора.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Активирование Hyper-V</h3>
+                <ul>
+                    <li>Виртуализация включена в BIOS/UEFI.</li>
+                    <li>Hyper-V активирован через PowerShell.</li>
+                    <li>Компьютер перезагружен после активации Hyper-V.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://docs.microsoft.com/ru-ru/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v"
+                            target="_blank">Официальная документация по Hyper-V</a></li>
+                </ul>
+            </div>
+
+            <!-- Шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Создание виртуальной машины в
+                Hyper-V</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Локальная машина (Windows 11 Home Edition)</p>
+
+                <h3>Описание</h3>
+                <p>В этом шаге мы создадим виртуальную машину с FreeBSD на вашем компьютере с Windows 11 Home Edition с
+                    помощью Hyper-V.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Активированный Hyper-V.</li>
+                    <li>Скачанный ISO-образ FreeBSD (например, <strong>FreeBSD-14.1-RELEASE-amd64-disc1.iso</strong>).
+                    </li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Скачивание ISO-образа
+                        FreeBSD</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите на официальный сайт FreeBSD: <a href="https://www.freebsd.org/where/"
+                                    target="_blank">https://www.freebsd.org/where/</a></li>
+                            <li>Скачайте последний стабильный релиз FreeBSD в формате ISO.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание виртуальной машины в
+                        Hyper-V</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте <strong>Диспетчер Hyper-V</strong>:
+                                <ul>
+                                    <li>Нажмите <strong>Пуск</strong> и начните вводить <strong>Hyper-V</strong>, затем
+                                        выберите <strong>Диспетчер Hyper-V</strong> из результатов поиска.</li>
+                                </ul>
+                            </li>
+                            <li>В правой панели выберите <strong>Новая</strong> &gt; <strong>Виртуальная
+                                    машина</strong>.</li>
+                            <li>Следуйте мастеру создания виртуальной машины:
+                                <ul>
+                                    <li><strong>Имя:</strong> Укажите название виртуальной машины, например,
+                                        <strong>FreeBSD</strong>.
+                                    </li>
+                                    <li><strong>Поколение:</strong> Выберите <strong>Поколение 1</strong>.</li>
+                                    <li><strong>Память:</strong> Установите минимум 4096 МБ (рекомендуется 8192 МБ).
+                                    </li>
+                                    <li><strong>Сеть:</strong> Выберите виртуальный коммутатор с доступом к интернету.
+                                    </li>
+                                    <li><strong>Жёсткий диск:</strong> Создайте новый виртуальный жёсткий диск объёмом
+                                        не менее 64 ГБ.</li>
+                                    <li><strong>Установка ОС:</strong> Выберите вариант установки с загрузочного
+                                        CD/DVD-ROM и укажите путь к скачанному ISO-образу.</li>
+                                </ul>
+                            </li>
+                            <li>Завершите создание виртуальной машины и запустите её.</li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Примечание:</strong> FreeBSD лучше
+                                совместима с виртуальными машинами поколения 1 в Hyper-V. Поколение 2 использует UEFI и
+                                может вызвать проблемы совместимости.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка FreeBSD на виртуальную
+                        машину</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Запустите виртуальную машину. Появится меню установщика FreeBSD.</li>
+                            <li>Следуйте инструкциям установщика:
+                                <ul>
+                                    <li>Выберите язык и раскладку клавиатуры.</li>
+                                    <li>Выберите <strong>Install</strong> для начала установки.</li>
+                                    <li>Укажите имя хоста (например, <strong>freebsd-vm</strong>).</li>
+                                    <li>Выберите компоненты для установки (можно оставить по умолчанию).</li>
+                                    <li>Настройте разделы диска, выбрав <strong>Auto (UFS)</strong>.</li>
+                                    <li>Установите пароль для пользователя <code>root</code>.</li>
+                                    <li>Настройте сеть (обычно автоматическое обнаружение через DHCP).</li>
+                                    <li>Выберите часовой пояс.</li>
+                                    <li>Настройте службы (можно оставить по умолчанию).</li>
+                                    <li>Создайте пользователя с правами администратора.</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <h4>Добавление пользователя в группу wheel</h4>
+                        <p>При создании пользователя выполните следующие шаги:</p>
+                        <ol>
+                            <li>Введите имя пользователя (например, <strong>admin</strong>).</li>
+                            <li>Установите пароль пользователя.</li>
+                            <li>Когда будет предложено «<em>Invite user into other groups?</em>», введите
+                                <code>wheel</code> для добавления пользователя в административную группу.
+                            </li>
+                            <li>Остальные настройки можно оставить по умолчанию или настроить по своему усмотрению.</li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Примечание:</strong> Группа
+                                <code>wheel</code> позволяет пользователю выполнять команды с привилегиями
+                                суперпользователя с использованием <code>su</code> или <code>sudo</code>.
+                            </p>
+                        </div>
+
+                        <details>
+                            <summary><strong>Что делать, если забыли добавить пользователя в группу wheel?</strong>
+                            </summary>
+                            <p><strong>Решение:</strong> После установки войдите под пользователем <code>root</code> и
+                                выполните команду:</p>
+                            <div class="code-block">
+                                <pre>
+pw groupmod wheel -m yourusername
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <p>Замените <code>yourusername</code> на имя вашего пользователя.</p>
+                        </details>
+
+                        <p>После завершения установки выберите <strong>Exit</strong> и перезагрузите систему.</p>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Создание виртуальной машины и установка FreeBSD</h3>
+                <ul>
+                    <li>Виртуальная машина создана и запущена в Hyper-V.</li>
+                    <li>FreeBSD установлена и доступна для входа.</li>
+                    <li>Создан пользователь с правами администратора.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://www.freebsd.org/doc/ru/books/handbook/installation.html"
+                            target="_blank">Официальное руководство по установке FreeBSD</a></li>
+                </ul>
+            </div>
+
+            <!-- Шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Начальная настройка системы</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>После установки FreeBSD необходимо выполнить начальную настройку системы и установить дополнительные
+                    пакеты.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Обновление системных
+                        пакетов</button>
+                    <div class="sub-panel">
+                        <p>Перед началом работы рекомендуется обновить системные пакеты.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Войдите в систему под пользователем <code>root</code>.</li>
+                            <li>Выполните команду обновления списка пакетов:</li>
+                            <div class="code-block">
+                                <pre>
+pkg update
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Обновите установленные пакеты:</li>
+                            <div class="code-block">
+                                <pre>
+pkg upgrade
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>pkg update</code>: Обновляет список доступных пакетов.</li>
+                            <li><code>pkg upgrade</code>: Обновляет установленные пакеты до последних версий.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка необходимых
+                        пакетов</button>
+                    <div class="sub-panel">
+                        <p>Установим текстовый редактор <code>nano</code> для удобного редактирования файлов и другие
+                            необходимые утилиты.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите редактор <code>nano</code>:</li>
+                            <div class="code-block">
+                                <pre>
+pkg install nano
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Установите другие полезные утилиты (опционально):</li>
+                            <div class="code-block">
+                                <pre>
+pkg install bash htop wget git
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>pkg install</code>: Устанавливает указанные пакеты.</li>
+                            <li><code>bash</code>: Альтернативная оболочка командной строки.</li>
+                            <li><code>htop</code>: Утилита для мониторинга системы.</li>
+                            <li><code>wget</code>: Инструмент для скачивания файлов из интернета.</li>
+                            <li><code>git</code>: Система контроля версий.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка прав
+                        пользователя</button>
+                    <div class="sub-panel">
+                        <p>По умолчанию команда <code>sudo</code> не установлена и не настроена в FreeBSD. Мы установим
+                            <code>sudo</code> и настроим пользователя для использования этой команды.
+                        </p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите пакет <code>sudo</code>:</li>
+                            <div class="code-block">
+                                <pre>
+pkg install sudo
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте пользователя в группу <code>wheel</code>, если ещё не сделали этого:</li>
+                            <div class="code-block">
+                                <pre>
+pw usermod admin -G wheel
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Настройте файл <code>/usr/local/etc/sudoers</code> для разрешения использования
+                                <code>sudo</code> пользователями группы <code>wheel</code>:
+                            </li>
+                            <div class="code-block">
+                                <pre>
+visudo
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>В редакторе найдите строку:
+                                <pre>
+# %wheel ALL=(ALL) ALL
+                                </pre>
+                                Удалите символ <code>#</code> в начале строки, чтобы раскомментировать её:
+                                <pre>
+%wheel ALL=(ALL) ALL
+                                </pre>
+                            </li>
+                            <li>Сохраните изменения и выйдите из редактора.</li>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>visudo</code>: Безопасный способ редактирования файла <code>sudoers</code>,
+                                проверяет синтаксис перед сохранением.</li>
+                            <li><code>pw usermod</code>: Модифицирует параметры пользователя.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 4 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Работа с редактором vi</button>
+                    <div class="sub-panel">
+                        <p>Редактор <code>vi</code> установлен по умолчанию в FreeBSD. Хотя мы установили
+                            <code>nano</code>, иногда может потребоваться использовать <code>vi</code>, например, при
+                            работе с <code>visudo</code>.
+                        </p>
+
+                        <h4>Основные команды vi</h4>
+                        <ul>
+                            <li><strong>Режимы:</strong> vi имеет два режима: командный и режим ввода текста.</li>
+                            <li><strong>Вход в режим ввода:</strong> Нажмите <code>i</code> для входа в режим ввода.
+                            </li>
+                            <li><strong>Выход из режима ввода:</strong> Нажмите <code>Esc</code> для возврата в
+                                командный режим.</li>
+                            <li><strong>Сохранение и выход:</strong> В командном режиме введите <code>:wq</code> и
+                                нажмите <strong>Enter</strong>.</li>
+                            <li><strong>Выход без сохранения:</strong> В командном режиме введите <code>:q!</code> и
+                                нажмите <strong>Enter</strong>.</li>
+                            <li><strong>Перемещение по тексту:</strong> Используйте клавиши стрелок или клавиши
+                                <code>h</code> (влево), <code>j</code> (вниз), <code>k</code> (вверх), <code>l</code>
+                                (вправо).
+                            </li>
+                        </ul>
+
+                        <p><strong>Совет:</strong> Если вам неудобно работать с <code>vi</code>, можно изменить редактор
+                            по умолчанию для команды <code>visudo</code>:</p>
+
+                        <div class="code-block">
+                            <pre>
+export EDITOR=nano
+visudo
+                            </pre>
+                            <button class="copy-button" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                        </div>
+
+                        <p>Теперь при запуске <code>visudo</code> будет использоваться редактор <code>nano</code>.</p>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Начальная настройка системы</h3>
+                <ul>
+                    <li>Система обновлена и установлены необходимые пакеты.</li>
+                    <li>Пользователь может использовать команду <code>sudo</code>.</li>
+                    <li>Вы знакомы с основными командами редактора <code>vi</code>.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://www.freebsd.org/doc/ru/books/handbook/pkgng-intro.html"
+                            target="_blank">Управление пакетами в FreeBSD</a></li>
+                    <li><a href="https://www.freebsd.org/doc/ru/books/handbook/editors.html" target="_blank">Редакторы в
+                            FreeBSD</a></li>
+                    <li><a href="https://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html"
+                            target="_blank">Шпаргалка по командам vi/vim</a></li>
+                </ul>
+            </div>
+
+            <!-- Шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Дальнейшая настройка системы</button>
+            <div class="panel">
+                <p>В следующих разделах мы рассмотрим настройку сети, управление пользователями и другие аспекты
+                    администрирования системы.</p>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../devops/introduction.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему
+                шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="network_configuration.html" class="button">Следующий шаг руководства: Администратор: Настройка
+                сетевой инфраструктуры <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="introduction.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу по
+                роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="network_configuration.html" class="button">Следующий шаг по роли: Настройка сетевой инфраструктуры
+                <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

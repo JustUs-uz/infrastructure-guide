@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Управление пользователями и правами доступа | Руководство для администратора</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item"><a href="os_installation.html">Установка и настройка ОС</a></li>
+            <li class="breadcrumb-item"><a href="network_configuration.html">Настройка сетевой инфраструктуры</a></li>
+            <li class="breadcrumb-item active">Управление пользователями и правами доступа</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-users-cog"></i> Управление пользователями и правами доступа</h1>
+        <p><strong>Роль:</strong> Администратор</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Создание нового пользователя</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>В этом шаге мы научимся создавать новых пользователей в системе FreeBSD и настраивать их основные
+                    параметры.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Использование команды
+                        adduser</button>
+                    <div class="sub-panel">
+                        <p>Команда <code>adduser</code> предоставляет интерактивный способ создания пользователей.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Войдите в систему под пользователем <code>root</code> или используйте <code>sudo</code>:
+                                <div class="code-block">
+                                    <pre>
+sudo -i
+                                    </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>Запустите команду <code>adduser</code>:
+                                <div class="code-block">
+                                    <pre>
+adduser
+                                    </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>Следуйте интерактивным подсказкам:
+                                <ul>
+                                    <li><strong>Username:</strong> Введите имя пользователя, например,
+                                        <code>testuser</code>.
+                                    </li>
+                                    <li><strong>Full name:</strong> Полное имя пользователя (опционально).</li>
+                                    <li><strong>Uid:</strong> Нажмите <strong>Enter</strong> для автоматического
+                                        назначения.</li>
+                                    <li><strong>Login group [testuser]:</strong> Нажмите <strong>Enter</strong> для
+                                        создания группы с именем пользователя.</li>
+                                    <li><strong>Login group is testuser. Invite testuser into other groups?</strong>
+                                        Введите <code>wheel</code>, если хотите дать пользователю возможность
+                                        использовать <code>sudo</code>, затем нажмите <strong>Enter</strong>.</li>
+                                    <li><strong>Login class [default]:</strong> Нажмите <strong>Enter</strong>.</li>
+                                    <li><strong>Shell:</strong> Выберите оболочку, например, <code>/bin/sh</code>, или
+                                        нажмите <strong>Enter</strong> для значения по умолчанию.</li>
+                                    <li><strong>Home directory [/home/testuser]:</strong> Нажмите
+                                        <strong>Enter</strong>.
+                                    </li>
+                                    <li><strong>Home directory permissions (Leave empty for default):</strong> Нажмите
+                                        <strong>Enter</strong>.
+                                    </li>
+                                    <li><strong>Use password-based authentication? [yes]:</strong> Нажмите
+                                        <strong>Enter</strong>.
+                                    </li>
+                                    <li><strong>Use an empty password? (yes/no) [no]:</strong> Нажмите
+                                        <strong>Enter</strong>.
+                                    </li>
+                                    <li><strong>Use a random password? (yes/no) [no]:</strong> Нажмите
+                                        <strong>Enter</strong>.
+                                    </li>
+                                    <li><strong>Enter password:</strong> Введите пароль для пользователя.</li>
+                                    <li><strong>Enter password again:</strong> Повторите пароль.</li>
+                                    <li><strong>Lock out the account after creation? [no]:</strong> Нажмите
+                                        <strong>Enter</strong>.
+                                    </li>
+                                    <li>Подтвердите создание пользователя, введя <code>yes</code> и нажав
+                                        <strong>Enter</strong>.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>После создания пользователя вы вернётесь в командную строку.</li>
+                        </ol>
+
+                        <h4>Объяснение параметров</h4>
+                        <ul>
+                            <li><strong>Username:</strong> Уникальное имя пользователя в системе.</li>
+                            <li><strong>Full name:</strong> Описание или полное имя пользователя (опционально).</li>
+                            <li><strong>Login group:</strong> Группа, к которой принадлежит пользователь.</li>
+                            <li><strong>Groups:</strong> Дополнительные группы, в которые входит пользователь (например,
+                                <code>wheel</code> для возможности использования <code>sudo</code>).
+                            </li>
+                            <li><strong>Shell:</strong> Оболочка командной строки, которая будет использоваться по
+                                умолчанию.</li>
+                            <li><strong>Home directory:</strong> Домашний каталог пользователя.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Создание пользователя</h3>
+                <ul>
+                    <li>Новый пользователь создан и отображается в системе.</li>
+                    <li>Пароль пользователя установлен.</li>
+                    <li>Пользователь добавлен в необходимые группы.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Управление группами
+                пользователей</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Группы используются для организации пользователей и назначения им общих прав доступа.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание новой группы</button>
+                    <div class="sub-panel">
+                        <p>Мы можем создавать новые группы с помощью команды <code>pw</code>.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте новую группу, например, <code>developers</code>:
+                                <div class="code-block">
+                                    <pre>
+sudo pw groupadd developers
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>Проверьте, что группа создана, просмотрев файл <code>/etc/group</code>:
+                                <div class="code-block">
+                                    <pre>
+cat /etc/group | grep developers
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>pw groupadd developers</code>: Создаёт новую группу с именем
+                                <code>developers</code>.
+                            </li>
+                            <li><code>cat /etc/group</code>: Выводит содержимое файла групп.</li>
+                            <li><code>grep developers</code>: Фильтрует вывод по строкам, содержащим
+                                <code>developers</code>.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Добавление пользователя в
+                        группу</button>
+                    <div class="sub-panel">
+                        <p>Добавим созданного ранее пользователя в новую группу.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Добавьте пользователя <code>testuser</code> в группу <code>developers</code>:
+                                <div class="code-block">
+                                    <pre>
+sudo pw groupmod developers -m testuser
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>Проверьте, что пользователь добавлен в группу:
+                                <div class="code-block">
+                                    <pre>
+groups testuser
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            <li>Вы должны увидеть список групп, включая <code>developers</code>.</li>
+                            </li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>pw groupmod developers -m testuser</code>: Модифицирует группу
+                                <code>developers</code>, добавляя в неё пользователя <code>testuser</code>.
+                            </li>
+                            <li><code>groups testuser</code>: Показывает группы, в которых состоит пользователь.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Управление группами</h3>
+                <ul>
+                    <li>Новая группа создана.</li>
+                    <li>Пользователь добавлен в группу.</li>
+                    <li>Группы пользователя отображаются корректно.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Настройка прав доступа к файлам и
+                каталогам</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Права доступа определяют, какие действия пользователь или группа могут выполнять с файлами и
+                    каталогами.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Понимание прав доступа</button>
+                    <div class="sub-panel">
+                        <p>В Unix-подобных системах каждый файл или каталог имеет права для трёх категорий:</p>
+                        <ul>
+                            <li><strong>Owner (владелец):</strong> Пользователь, которому принадлежит файл.</li>
+                            <li><strong>Group (группа):</strong> Группа, к которой относится файл.</li>
+                            <li><strong>Others (остальные):</strong> Все остальные пользователи.</li>
+                        </ul>
+
+                        <p>Права доступа могут быть:</p>
+                        <ul>
+                            <li><strong>Read (r):</strong> Чтение файла или списка файлов в каталоге.</li>
+                            <li><strong>Write (w):</strong> Запись или изменение файла, добавление или удаление файлов в
+                                каталоге.</li>
+                            <li><strong>Execute (x):</strong> Выполнение файла или доступ к содержимому каталога.</li>
+                        </ul>
+
+                        <p>Команда <code>ls -l</code> показывает права доступа к файлам и каталогам.</p>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Изменение прав доступа</button>
+                    <div class="sub-panel">
+                        <p>Используем команду <code>chmod</code> для изменения прав доступа.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте тестовый файл:
+                                <div class="code-block">
+                                    <pre>
+touch /home/testuser/testfile.txt
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>Установите права доступа, позволяющие группе <code>developers</code> читать и записывать
+                                в файл:
+                                <div class="code-block">
+                                    <pre>
+sudo chmod 660 /home/testuser/testfile.txt
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>Проверьте права доступа:
+                                <div class="code-block">
+                                    <pre>
+ls -l /home/testuser/testfile.txt
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                Вы должны увидеть что-то вроде:
+                                <pre>
+-rw-rw----  1 testuser  developers  0 Sep 22 12:34 testfile.txt
+                                </pre>
+                            </li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>chmod 660</code>: Устанавливает права <code>rw-rw----</code> (чтение и запись для
+                                владельца и группы).</li>
+                            <li><code>ls -l</code>: Показывает подробную информацию о файлах, включая права доступа.
+                            </li>
+                        </ul>
+
+                        <p><strong>Символьное представление прав:</strong></p>
+                        <ul>
+                            <li><code>-rw-rw----</code>:
+                                <ul>
+                                    <li><code>-</code>: Тип файла (тире означает обычный файл).</li>
+                                    <li><code>rw-</code>: Права владельца (чтение и запись).</li>
+                                    <li><code>rw-</code>: Права группы (чтение и запись).</li>
+                                    <li><code>---</code>: Права остальных (нет доступа).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Изменение владельца и группы
+                        файла</button>
+                    <div class="sub-panel">
+                        <p>Используем команду <code>chown</code> для изменения владельца и группы файла.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Измените владельца и группу файла на другого пользователя и группу:
+                                <div class="code-block">
+                                    <pre>
+sudo chown root:wheel /home/testuser/testfile.txt
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>Проверьте изменения:
+                                <div class="code-block">
+                                    <pre>
+ls -l /home/testuser/testfile.txt
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                Вы должны увидеть, что владельцем стал <code>root</code>, а группа изменилась на
+                                <code>wheel</code>.
+                            </li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>chown root:wheel</code>: Устанавливает владельца <code>root</code> и группу
+                                <code>wheel</code>.
+                            </li>
+                            <li><code>chown user:group file</code>: Общий формат команды.</li>
+                        </ul>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Будьте осторожны при
+                                изменении владельца и прав доступа, чтобы не нарушить работу системы или приложений.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Настройка прав доступа</h3>
+                <ul>
+                    <li>Понимаете, как работают права доступа в системе.</li>
+                    <li>Умеете изменять права доступа к файлам и каталогам.</li>
+                    <li>Умеете изменять владельца и группу файлов.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Управление пользователями с помощью
+                команды pw</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Команда <code>pw</code> предоставляет мощный способ управления пользователями и группами через
+                    командную строку.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание пользователя с помощью
+                        pw</button>
+                    <div class="sub-panel">
+                        <p>Создадим нового пользователя без интерактивного ввода.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте пользователя <code>user2</code> с домашним каталогом и оболочкой
+                                <code>/bin/sh</code>:
+                                <div class="code-block">
+                                    <pre>
+sudo pw useradd user2 -m -s /bin/sh -h 0
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <ul>
+                                    <li>Вас попросят ввести пароль для пользователя.</li>
+                                </ul>
+                            </li>
+                            <li>Проверьте, что пользователь создан:
+                                <div class="code-block">
+                                    <pre>
+id user2
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                Вы должны увидеть информацию о пользователе и его группах.
+                            </li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>pw useradd user2</code>: Создаёт пользователя с именем <code>user2</code>.</li>
+                            <li><code>-m</code>: Создаёт домашний каталог для пользователя.</li>
+                            <li><code>-s /bin/sh</code>: Устанавливает оболочку по умолчанию.</li>
+                            <li><code>-h 0</code>: Указывает, что пароль будет введён из стандартного ввода (т.е. с
+                                клавиатуры).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Удаление пользователя</button>
+                    <div class="sub-panel">
+                        <p>Удалим пользователя из системы.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Удалите пользователя <code>user2</code> и его домашний каталог:
+                                <div class="code-block">
+                                    <pre>
+sudo pw userdel user2 -r
+                                </pre>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>Проверьте, что пользователь удалён:
+                                <div class="code-block">
+                                    <pre>
+id user2
+                                </pre>
+                                </div>
+                                Вы должны получить сообщение об ошибке, что пользователь не найден.
+                            </li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>pw userdel user2</code>: Удаляет пользователя <code>user2</code>.</li>
+                            <li><code>-r</code>: Удаляет домашний каталог пользователя и его почту.</li>
+                        </ul>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Удаляя пользователя,
+                                убедитесь, что он не используется системными процессами или сервисами.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Использование команды pw</h3>
+                <ul>
+                    <li>Умеете создавать пользователей без интерактивного ввода.</li>
+                    <li>Умеете удалять пользователей и их данные.</li>
+                    <li>Понимаете параметры команды <code>pw</code>.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 5 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 5: Практические советы и
+                рекомендации</button>
+            <div class="panel">
+                <h3>Советы</h3>
+                <ul>
+                    <li><strong>Регулярно проверяйте список пользователей и групп:</strong> Это поможет поддерживать
+                        порядок и безопасность в системе.</li>
+                    <li><strong>Используйте сильные пароли:</strong> Обеспечьте безопасность, требуя от пользователей
+                        использовать сложные пароли.</li>
+                    <li><strong>Ограничьте права доступа:</strong> Предоставляйте пользователям минимально необходимые
+                        права для выполнения их задач.</li>
+                    <li><strong>Создавайте группы по ролям:</strong> Это упростит управление правами доступа для
+                        пользователей с одинаковыми обязанностями.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://www.freebsd.org/doc/handbook/users.html" target="_blank">Управление
+                            пользователями в FreeBSD</a></li>
+                    <li><a href="https://www.freebsd.org/cgi/man.cgi?query=pw&sektion=8" target="_blank">Страница
+                            руководства по команде pw</a></li>
+                    <li><a href="https://www.freebsd.org/doc/handbook/permissions.html" target="_blank">Права доступа и
+                            безопасность</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../developer/docker_kubernetes.html" class="button"><i class="fas fa-arrow-left"></i> Назад к
+                предыдущему шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="system_monitoring.html" class="button">Следующий шаг руководства: Администратор: Мониторинг и
+                обслуживание системы <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="network_configuration.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему
+                шагу по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="system_monitoring.html" class="button">Следующий шаг по роли: Мониторинг и обслуживание системы <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

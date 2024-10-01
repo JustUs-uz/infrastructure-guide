@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Настройка сетевой инфраструктуры | Руководство для администратора</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item"><a href="os_installation.html">Установка и настройка ОС</a></li>
+            <li class="breadcrumb-item active">Настройка сетевой инфраструктуры</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-network-wired"></i> Настройка сетевой инфраструктуры</h1>
+        <p><strong>Роль:</strong> Администратор</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Проверка текущих сетевых
+                настроек</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Прежде чем приступить к настройке сети, необходимо понять, какие настройки уже существуют в системе.
+                </p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Просмотр настроек сетевых
+                        интерфейсов</button>
+                    <div class="sub-panel">
+                        <p>Мы используем команду <code>ifconfig</code> для просмотра информации о сетевых интерфейсах.
+                        </p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте терминал на вашей виртуальной машине FreeBSD.</li>
+                            <li>Выполните команду:</li>
+                            <div class="code-block">
+                                <pre>
+ifconfig
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Вы увидите список сетевых интерфейсов, например, <code>em0</code>, <code>lo0</code>.
+                            </li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>ifconfig</code>: Показывает информацию о сетевых интерфейсах.</li>
+                            <li><code>em0</code>: Обычно это первый Ethernet-интерфейс.</li>
+                            <li><code>lo0</code>: Лупбэк-интерфейс, используется системой для связи с собой.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Проверка текущих настроек
+                        IP-адреса</button>
+                    <div class="sub-panel">
+                        <p>Узнаем, какой IP-адрес назначен нашему интерфейсу.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>В выводе команды <code>ifconfig</code> найдите секцию, относящуюся к интерфейсу
+                                <code>em0</code>.
+                            </li>
+                            <li>Найдите строку, начинающуюся с <code>inet</code>. Это будет ваш IP-адрес.</li>
+                        </ol>
+
+                        <p><strong>Пример вывода:</strong></p>
+                        <div class="code-block">
+                            <pre>
+em0: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; metric 0 mtu 1500
+    options=209b&lt;RXCSUM,TXCSUM,VLAN_MTU,VLAN_HWTAGGING,VLAN_HWCSUM,LRO&gt;
+    ether 00:15:5d:00:00:01
+    inet 192.168.1.10 netmask 0xffffff00 broadcast 192.168.1.255
+    media: Ethernet autoselect (1000baseT &lt;full-duplex&gt;)
+    status: active
+                            </pre>
+                        </div>
+
+                        <h4>Объяснение вывода</h4>
+                        <ul>
+                            <li><code>inet 192.168.1.10</code>: Ваш текущий IP-адрес.</li>
+                            <li><code>netmask 0xffffff00</code>: Сетевой маска подсети (255.255.255.0).</li>
+                            <li><code>broadcast 192.168.1.255</code>: Широковещательный адрес сети.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка текущих сетевых настроек</h3>
+                <ul>
+                    <li>Вы знаете, какие сетевые интерфейсы доступны в системе.</li>
+                    <li>Вы определили текущий IP-адрес системы.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Настройка статического
+                IP-адреса</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>По умолчанию система может использовать DHCP для получения IP-адреса. Мы настроим статический
+                    IP-адрес для нашей виртуальной машины.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Редактирование файла конфигурации
+                        сети</button>
+                    <div class="sub-panel">
+                        <p>В FreeBSD настройки сети хранятся в файле <code>/etc/rc.conf</code>.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте файл <code>/etc/rc.conf</code> для редактирования с помощью редактора
+                                <code>nano</code>:
+                            </li>
+                            <div class="code-block">
+                                <pre>
+sudo nano /etc/rc.conf
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Найдите строки, относящиеся к вашему сетевому интерфейсу, например:</li>
+                            <div class="code-block">
+                                <pre>
+ifconfig_em0="DHCP"
+                            </pre>
+                            </div>
+                            <li>Закомментируйте строку, добавив символ <code>#</code> в начале:</li>
+                            <div class="code-block">
+                                <pre>
+#ifconfig_em0="DHCP"
+                            </pre>
+                            </div>
+                            <li>Добавьте следующие строки, заменив значения на ваши:
+                                <div class="code-block">
+                                    <pre>
+ifconfig_em0="inet 192.168.1.50 netmask 255.255.255.0"
+defaultrouter="192.168.1.1"
+                                    </pre>
+                                </div>
+                                <ul>
+                                    <li><code>192.168.1.50</code>: Желаемый статический IP-адрес.</li>
+                                    <li><code>255.255.255.0</code>: Маска подсети.</li>
+                                    <li><code>192.168.1.1</code>: IP-адрес вашего маршрутизатора (шлюза).</li>
+                                </ul>
+                            </li>
+                            <li>Сохраните изменения:
+                                <ul>
+                                    <li>В редакторе <code>nano</code> нажмите <code>Ctrl + O</code>, затем
+                                        <strong>Enter</strong>.
+                                    </li>
+                                    <li>Для выхода нажмите <code>Ctrl + X</code>.</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>/etc/rc.conf</code>: Основной файл конфигурации системы в FreeBSD.</li>
+                            <li><code>ifconfig_em0</code>: Настройки для сетевого интерфейса <code>em0</code>.</li>
+                            <li><code>defaultrouter</code>: Указывает основной шлюз по умолчанию.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка DNS-серверов</button>
+                    <div class="sub-panel">
+                        <p>Укажем DNS-серверы для разрешения доменных имён.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте файл <code>/etc/resolv.conf</code> для редактирования:</li>
+                            <div class="code-block">
+                                <pre>
+sudo nano /etc/resolv.conf
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Добавьте следующие строки:
+                                <div class="code-block">
+                                    <pre>
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+                                    </pre>
+                                </div>
+                                <ul>
+                                    <li>Это публичные DNS-серверы Google.</li>
+                                </ul>
+                            </li>
+                            <li>Сохраните и закройте файл.</li>
+                        </ol>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>/etc/resolv.conf</code>: Файл конфигурации DNS в Unix-системах.</li>
+                            <li><code>nameserver</code>: Указывает адрес DNS-сервера.</li>
+                        </ul>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Иногда файл
+                                <code>/etc/resolv.conf</code> может быть перезаписан. Чтобы этого избежать, можно
+                                настроить <code>resolvconf</code> или сделать файл только для чтения.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Перезапуск сетевых
+                        сервисов</button>
+                    <div class="sub-panel">
+                        <p>Чтобы изменения вступили в силу, необходимо перезапустить сетевые сервисы или перезагрузить
+                            систему.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перезапустите сетевой интерфейс:</li>
+                            <div class="code-block">
+                                <pre>
+sudo service netif restart && sudo service routing restart
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Либо перезагрузите систему:</li>
+                            <div class="code-block">
+                                <pre>
+sudo reboot
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </ol>
+
+                        <h4>Проверка настроек</h4>
+                        <ol>
+                            <li>После перезапуска проверьте настройки сети с помощью команды <code>ifconfig</code>.</li>
+                            <li>Убедитесь, что IP-адрес соответствует заданному.</li>
+                            <li>Проверьте подключение к интернету, выполнив команду:</li>
+                            <div class="code-block">
+                                <pre>
+ping -c 4 google.com
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Если вы получаете ответы, значит настройка прошла успешно.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Настройка статического IP-адреса</h3>
+                <ul>
+                    <li>Статический IP-адрес установлен и активен.</li>
+                    <li>DNS-серверы настроены и работают.</li>
+                    <li>Система имеет доступ к интернету.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Настройка SSH-доступа</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>SSH (Secure Shell) позволяет безопасно подключаться к серверу удалённо. Настроим SSH-сервер для
+                    удалённого доступа к нашей виртуальной машине.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Включение SSH-сервера</button>
+                    <div class="sub-panel">
+                        <p>По умолчанию SSH-сервер установлен в FreeBSD, но может быть не настроен для запуска при
+                            старте системы.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте файл <code>/etc/rc.conf</code> для редактирования:</li>
+                            <div class="code-block">
+                                <pre>
+sudo nano /etc/rc.conf
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Добавьте строку:
+                                <div class="code-block">
+                                    <pre>
+sshd_enable="YES"
+                                </pre>
+                                </div>
+                            </li>
+                            <li>Сохраните и закройте файл.</li>
+                            <li>Запустите SSH-сервер вручную:</li>
+                            <div class="code-block">
+                                <pre>
+sudo service sshd start
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </ol>
+
+                        <h4>Проверка SSH-сервера</h4>
+                        <ol>
+                            <li>Проверьте статус SSH-сервера:</li>
+                            <div class="code-block">
+                                <pre>
+sudo service sshd status
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Вы должны увидеть сообщение, что сервис запущен.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка SSH для удалённого
+                        доступа</button>
+                    <div class="sub-panel">
+                        <p>Теперь можно подключиться к серверу по SSH с вашей хостовой машины (Windows 11 Home Edition).
+                        </p>
+
+                        <p><strong>Действия на хостовой машине:</strong></p>
+                        <ol>
+                            <li>Откройте терминал PowerShell или командную строку.</li>
+                            <li>Подключитесь к серверу, используя IP-адрес виртуальной машины:</li>
+                            <div class="code-block">
+                                <pre>
+ssh admin@192.168.1.50
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <ul>
+                                <li><code>admin</code>: Имя пользователя на сервере.</li>
+                                <li><code>192.168.1.50</code>: IP-адрес виртуальной машины.</li>
+                            </ul>
+                            <li>Если появится предупреждение о ключе хоста, введите <code>yes</code> и нажмите
+                                <strong>Enter</strong>.
+                            </li>
+                            <li>Введите пароль пользователя <code>admin</code>.</li>
+                            <li>После успешной аутентификации вы получите доступ к командной строке сервера.</li>
+                        </ol>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li><code>ssh</code>: Клиент SSH для подключения к удалённым серверам.</li>
+                            <li>При первом подключении создаётся запись о сервере в файле <code>known_hosts</code>.</li>
+                        </ul>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Убедитесь, что
+                                брандмауэр Windows или другие сетевые настройки не блокируют порт <code>22</code>,
+                                используемый для SSH.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Настройка SSH-доступа</h3>
+                <ul>
+                    <li>SSH-сервер запущен и настроен на виртуальной машине.</li>
+                    <li>Вы можете подключиться к серверу по SSH с хостовой машины.</li>
+                    <li>Удалённый доступ работает корректно.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Дополнительные настройки сети</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>После настройки основных сетевых параметров можно изучить дополнительные возможности:</p>
+
+                <ul>
+                    <li>Настройка брандмауэра (pf или ipfw) для контроля входящего и исходящего трафика.</li>
+                    <li>Настройка VPN для безопасного удалённого доступа.</li>
+                    <li>Создание виртуальных сетей и VLAN для разделения трафика.</li>
+                </ul>
+
+                <p>Эти темы будут рассмотрены в последующих разделах руководства.</p>
+
+                <!-- Включение дополнительного контента из infrastructure_preparation.html -->
+                <!-- Пример: Настройка брандмауэра -->
+                <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка брандмауэра (pf)</button>
+                <div class="sub-panel">
+                    <p>pf (Packet Filter) — это мощный брандмауэр в FreeBSD, который позволяет контролировать входящий и
+                        исходящий трафик.</p>
+
+                    <p><strong>Действия:</strong></p>
+                    <ol>
+                        <li>Откройте файл конфигурации pf:</li>
+                        <div class="code-block">
+                            <pre>
+sudo nano /etc/pf.conf
+                            </pre>
+                            <button class="copy-button" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <li>Добавьте базовые правила для разрешения SSH и HTTP/HTTPS трафика:</li>
+                        <div class="code-block">
+                            <pre>
+# Разрешить loopback интерфейс
+set skip on lo0
+
+# Базовые правила
+block all
+pass in on em0 inet proto tcp from any to any port 22 keep state
+pass in on em0 inet proto tcp from any to any port {80, 443} keep state
+pass out all keep state
+                            </pre>
+                        </div>
+                        <li>Сохраните и закройте файл.</li>
+                        <li>Активируйте pf и загрузите новые правила:</li>
+                        <div class="code-block">
+                            <pre>
+sudo sysrc pf_enable="YES"
+sudo sysrc pflog_enable="YES"
+sudo service pf start
+sudo pfctl -f /etc/pf.conf
+sudo pfctl -e
+                            </pre>
+                            <button class="copy-button" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <li>Проверьте статус pf:</li>
+                        <div class="code-block">
+                            <pre>
+sudo pfctl -s all
+                            </pre>
+                            <button class="copy-button" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </ol>
+
+                    <h4>Объяснение правил</h4>
+                    <ul>
+                        <li><code>block all</code>: Блокирует весь входящий и исходящий трафик по умолчанию.</li>
+                        <li><code>pass in on em0 inet proto tcp from any to any port 22 keep state</code>: Разрешает
+                            входящий SSH-трафик.</li>
+                        <li><code>pass in on em0 inet proto tcp from any to any port {80, 443} keep state</code>:
+                            Разрешает входящий HTTP и HTTPS трафик.</li>
+                        <li><code>pass out all keep state</code>: Разрешает весь исходящий трафик.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="os_installation.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу по
+                руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../developer/preparation.html" class="button">Следующий шаг руководства: Разработчик: Подготовка
+                среды разработки <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="os_installation.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу по
+                роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="user_management.html" class="button">Следующий шаг по роли: Управление пользователями и правами
+                доступа <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

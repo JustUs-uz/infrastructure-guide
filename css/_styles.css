@@ -1,0 +1,471 @@
+/* Подключение шрифтов */
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+/* Общие стили */
+body {
+  background-color: #121212;
+  color: #fde7c6;
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: #ff9800;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.padding-bottom {
+  padding-bottom: 30px;
+}
+
+.padding-top {
+  padding-top: 40px;
+}
+
+p,
+ul,
+ol {
+  line-height: 1.6;
+}
+
+a {
+  color: #ffcc80;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #ff9800;
+}
+
+main {
+  padding: 20px;
+}
+
+/* Стили для фиксированной навигации */
+.fixed-nav {
+  background-color: #181818;
+  border-bottom: 1px solid #ff9800;
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Стили для секции интро */
+.intro-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.intro-image {
+  flex: 0 0 28%;
+  max-width: 28%;
+  padding: 10px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.intro-text {
+  flex: 0 0 72%;
+  max-width: 72%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+
+.intro-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* Стили для сворачиваемого списка технологий */
+details {
+  margin-top: 10px;
+}
+
+details summary {
+  cursor: pointer;
+  color: #ffcc80;
+}
+
+details summary:hover {
+  color: #ff9800;
+}
+
+details ul.tech-list {
+  margin-top: 10px;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+details ul.tech-list li {
+  margin-bottom: 5px;
+}
+
+/* Стили для информационного блока */
+.info-block {
+  background-color: #1f1f1f;
+  border-left: 4px solid #ff9800;
+  padding: 15px 20px;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+.info-block p {
+  margin: 0;
+  color: #fde7c6;
+}
+
+.info-block i {
+  margin-right: 10px;
+  color: #ff9800;
+}
+
+/* Стили для контейнера требований */
+.requirements-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.requirement-column {
+  flex: 0 0 32%;
+  max-width: 32%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+/* Стили для контейнера ролей */
+.roles-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.role-column {
+  flex: 0 0 32%;
+  max-width: 32%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.role-column .accordion {
+  width: 100%;
+}
+
+/* Стили для аккордеона */
+.accordion {
+  background-color: #181818;
+  color: #ffcc80;
+  cursor: pointer;
+  padding: 15px 20px;
+  border: none;
+  text-align: left;
+  outline: none;
+  transition: 0.4s;
+  font-size: 18px;
+  border-bottom: 1px solid #ff9800;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.accordion::before {
+  content: "\f0da"; /* Иконка стрелки */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+.accordion.active::before {
+  transform: rotate(90deg);
+}
+
+.accordion:hover {
+  background-color: #1f1f1f;
+}
+
+.accordion i {
+  margin-right: 10px;
+}
+
+.accordion.active,
+.accordion:hover {
+  background-color: #1f1f1f;
+}
+
+.panel {
+  background-color: #121212;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding-left: 20px;
+}
+
+/*.panel h3, 
+.panel ul,
+.panel ol, */
+.panel p,
+.panel h4
+{
+  color: #fde7c6;
+}
+
+.panel h3,
+.panel h4 {
+  margin-top: 20px;
+}
+/*
+.panel ol,
+.panel ul {
+  padding-left: 20px;
+}
+
+.panel ul {
+  list-style-type: none;
+  padding: 10px 0;
+  margin: 0;
+}
+
+.panel ul li {
+  margin: 10px 0;
+}
+*/
+.panel ul li a {
+  color: #ffcc80;
+  text-decoration: none;
+}
+
+.panel ul li a:hover {
+  color: #ff9800;
+  text-decoration: underline;
+}
+
+/* Стили для подаккордеона */
+.sub-accordion {
+  background-color: #1a1a1a;
+  color: #ffcc80;
+  cursor: pointer;
+  padding: 10px 15px;
+  border: none;
+  text-align: left;
+  outline: none;
+  transition: 0.4s;
+  font-size: 16px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.sub-accordion i {
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+.sub-accordion.active i {
+  transform: rotate(90deg);
+}
+
+.sub-accordion.active,
+.sub-accordion:hover {
+  background-color: #232323;
+}
+
+.sub-panel {
+  background-color: #1e1e1e;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  padding-left: 20px;
+}
+
+.sub-panel p,
+.sub-panel h4,
+.sub-panel ul,
+.sub-panel ol {
+  color: #fde7c6;
+}
+
+.sub-panel h4 {
+  margin-top: 20px;
+}
+
+.sub-panel ol,
+.sub-panel ul {
+  padding-left: 20px;
+}
+
+/* Стили для блока кода */
+.code-block {
+  position: relative;
+  background-color: #333333;
+  color: #ffcc80;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-family: "Courier New", monospace;
+  margin-bottom: 10px;
+}
+
+.code-block pre {
+  margin: 0;
+}
+
+.copy-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: rgba(253, 231, 198, 0.6);
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.copy-button:hover {
+  color: rgba(253, 231, 198, 1);
+}
+
+/* Стили для информационного блока */
+.info-block {
+  background-color: #1f1f1f;
+  border-left: 4px solid #ff9800;
+  padding: 15px 20px;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+.info-block p {
+  margin: 0;
+  color: #fde7c6;
+}
+
+.info-block i {
+  margin-right: 10px;
+  color: #ff9800;
+}
+
+/* Стили для details и summary */
+details {
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffcc80;
+  outline: none;
+}
+
+details p {
+  margin-top: 10px;
+  color: #fde7c6;
+}
+
+/* Стили для списка */
+ul,
+ol {
+  padding-left: 20px;
+}
+
+/* Иконки для ролей */
+.role-icon {
+  margin-right: 10px;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+/* Иконки для разных ролей */
+.icon-developer::before {
+  content: "\f121"; /* Иконка Разработчик */
+}
+
+.icon-devops::before {
+  content: "\f085"; /* Иконка DevOps */
+}
+
+.icon-admin::before {
+  content: "\f3ed"; /* Иконка Администратор */
+}
+
+/* Стили для футера */
+footer {
+  background-color: #181818;
+  color: #ffcc80;
+  padding: 5px 10px;
+  text-align: center;
+  border-top: 1px solid #ff9800;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Стили для навигации */
+.navigation {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.navigation .button {
+  display: inline-block;
+  background-color: #ff9800;
+  color: #121212;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  margin: 5px;
+  transition: background-color 0.3s;
+}
+
+.navigation .button:hover {
+  background-color: #ffcc80;
+  color: #121212;
+}
+
+/* Стили для списков внутри details */
+details ul,
+details ol {
+  padding-left: 20px;
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 768px) {
+  .intro-container {
+    flex-direction: column;
+  }
+
+  .intro-image,
+  .intro-text {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .requirements-container,
+  .roles-container {
+    flex-direction: column;
+  }
+
+  .requirement-column,
+  .role-column {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}

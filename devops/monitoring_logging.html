@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Мониторинг и логирование | Руководство по DevOps</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item"><a href="infrastructure.html">Подготовка инфраструктуры</a></li>
+            <li class="breadcrumb-item"><a href="containerization.html">Контейнеризация приложений</a></li>
+            <li class="breadcrumb-item"><a href="kubernetes_setup.html">Настройка Kubernetes</a></li>
+            <li class="breadcrumb-item"><a href="traefik_configuration.html">Настройка Traefik в Kubernetes</a></li>
+            <li class="breadcrumb-item"><a href="ci_cd_pipeline.html">Настройка CI/CD пайплайна</a></li>
+            <li class="breadcrumb-item active">Мониторинг и логирование</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-chart-line"></i> Мониторинг и логирование</h1>
+        <p><strong>Роль:</strong> DevOps</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Главный шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Установка Prometheus и Grafana для
+                мониторинга</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Prometheus и Grafana — это инструменты для мониторинга и визуализации метрик из Kubernetes-кластера.
+                    В этом шаге мы установим Prometheus и Grafana с помощью Helm.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Работающий Kubernetes-кластер (Minikube).</li>
+                    <li>Установленный и настроенный kubectl.</li>
+                    <li>Установленный Helm.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Добавление репозиториев Helm для
+                        Prometheus и Grafana</button>
+                    <div class="sub-panel">
+                        <p>Добавим необходимые репозитории Helm для установки Prometheus и Grafana.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Добавьте репозиторий для Prometheus:</li>
+                            <div class="code-block">
+                                <pre>
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте репозиторий для Grafana:</li>
+                            <div class="code-block">
+                                <pre>
+helm repo add grafana https://grafana.github.io/helm-charts
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Обновите локальный кэш репозиториев Helm:</li>
+                            <div class="code-block">
+                                <pre>
+helm repo update
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>helm repo add</code>: Добавляет новый репозиторий чарта.</li>
+                            <li><code>helm repo update</code>: Обновляет информацию о доступных чартах.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Prometheus</button>
+                    <div class="sub-panel">
+                        <p>Установим Prometheus в Kubernetes-кластер с помощью Helm.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте пространство имён для мониторинга:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl create namespace monitoring
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Установите Prometheus:</li>
+                            <div class="code-block">
+                                <pre>
+helm install prometheus prometheus-community/prometheus --namespace=monitoring
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте, что все компоненты Prometheus запущены:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl get pods -n monitoring
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>helm install</code>: Устанавливает чарт в кластер.</li>
+                            <li><code>prometheus-community/prometheus</code>: Используем чарт Prometheus из сообщества.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Grafana</button>
+                    <div class="sub-panel">
+                        <p>Установим Grafana для визуализации метрик, собираемых Prometheus.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите Grafana:</li>
+                            <div class="code-block">
+                                <pre>
+helm install grafana grafana/grafana --namespace=monitoring
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте, что Grafana запущена:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl get pods -n monitoring
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>grafana/grafana</code>: Используем чарт Grafana из официального репозитория.</li>
+                        </ul>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-info-circle"></i> Примечание:</strong> По умолчанию Grafana не
+                                будет доступна извне кластера. В следующем шаге мы настроим доступ к Grafana.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 4 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка доступа к
+                        Grafana</button>
+                    <div class="sub-panel">
+                        <p>Настроим доступ к интерфейсу Grafana с помощью порт-форвардинга.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Получите имя пода Grafana:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl get pods -n monitoring -l app.kubernetes.io/name=grafana
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Выполните порт-форвардинг для доступа к Grafana:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl port-forward -n monitoring svc/grafana 3000:80
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Откройте веб-браузер и перейдите по адресу <code>http://localhost:3000</code>.</li>
+                            <li>Введите имя пользователя и пароль по умолчанию:
+                                <ul>
+                                    <li><strong>Username:</strong> admin</li>
+                                    <li><strong>Password:</strong> выполните команду ниже, чтобы получить пароль:</li>
+                                </ul>
+                                <div class="code-block">
+                                    <pre>
+kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+                                    </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                            </li>
+                            <li>После входа вы можете изменить пароль на более безопасный.</li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Порт-форвардинг будет
+                                работать, пока команда выполняется в терминале. Если вы прервёте команду, доступ к
+                                Grafana будет потерян.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка установки Prometheus и Grafana</h3>
+                <ul>
+                    <li>Prometheus и Grafana установлены и работают в Kubernetes-кластере.</li>
+                    <li>Вы можете получить доступ к интерфейсу Grafana через браузер.</li>
+                    <li>Успешно выполнен вход в Grafana с использованием предоставленных учётных данных.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://prometheus.io/docs/introduction/overview/" target="_blank">Официальная
+                            документация Prometheus</a></li>
+                    <li><a href="https://grafana.com/docs/grafana/latest/" target="_blank">Официальная документация
+                            Grafana</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Настройка сбора метрик Kubernetes в
+                Grafana</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Настроим Grafana для отображения метрик Kubernetes, собираемых Prometheus.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Добавление источника данных
+                        Prometheus в Grafana</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>В интерфейсе Grafana нажмите на значок "Настройки" (шестерёнка) и выберите <strong>Data
+                                    Sources</strong>.</li>
+                            <li>Нажмите кнопку <strong>Add data source</strong>.</li>
+                            <li>Выберите <strong>Prometheus</strong> из списка источников данных.</li>
+                            <li>Заполните поля:
+                                <ul>
+                                    <li><strong>Name:</strong> Prometheus</li>
+                                    <li><strong>URL:</strong>
+                                        <code>http://prometheus-server.monitoring.svc.cluster.local:80</code>
+                                    </li>
+                                    <li>Оставьте остальные настройки по умолчанию.</li>
+                                </ul>
+                            </li>
+                            <li>Нажмите кнопку <strong>Save & Test</strong>.</li>
+                            <li>Вы должны увидеть сообщение <code>Data source is working</code>.</li>
+                        </ol>
+
+                        <h4>Объяснение настроек</h4>
+                        <ul>
+                            <li><code>URL</code>: Внутренний адрес службы Prometheus в кластере Kubernetes.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Импорт готовых дашбордов для
+                        Kubernetes</button>
+                    <div class="sub-panel">
+                        <p>Используем готовые дашборды Grafana для отображения метрик Kubernetes.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите в раздел <strong>Dashboards</strong> и нажмите <strong>Import</strong>.</li>
+                            <li>В поле <strong>Import via grafana.com</strong> введите номер дашборда, например,
+                                <code>6417</code> для Kubernetes Cluster Monitoring.
+                            </li>
+                            <li>Нажмите <strong>Load</strong>.</li>
+                            <li>Выберите источник данных <strong>Prometheus</strong>.</li>
+                            <li>Нажмите <strong>Import</strong>.</li>
+                            <li>Дашборд будет добавлен, и вы сможете просматривать метрики кластера Kubernetes.</li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-info-circle"></i> Примечание:</strong> Вы можете найти другие
+                                дашборды на сайте <a href="https://grafana.com/grafana/dashboards/"
+                                    target="_blank">Grafana Dashboards</a>, используя поиск по ключевым словам.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка отображения метрик Kubernetes в Grafana</h3>
+                <ul>
+                    <li>Источник данных Prometheus успешно добавлен в Grafana.</li>
+                    <li>Дашборды Grafana отображают метрики Kubernetes-кластера.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Установка стека EFK для
+                логирования</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Стек EFK (Elasticsearch, Fluentd, Kibana) используется для сбора, хранения и визуализации логов из
+                    Kubernetes-кластера. В этом шаге мы установим EFK-стек.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Elasticsearch</button>
+                    <div class="sub-panel">
+                        <p>Установим Elasticsearch для хранения логов.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Добавьте репозиторий Elastic в Helm:</li>
+                            <div class="code-block">
+                                <pre>
+helm repo add elastic https://helm.elastic.co
+helm repo update
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Установите Elasticsearch:</li>
+                            <div class="code-block">
+                                <pre>
+helm install elasticsearch elastic/elasticsearch --namespace=logging --create-namespace
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте статус подов Elasticsearch:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl get pods -n logging
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Elasticsearch требует
+                                значительных ресурсов. Убедитесь, что ваш кластер имеет достаточное количество памяти и
+                                процессорных ресурсов.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Kibana</button>
+                    <div class="sub-panel">
+                        <p>Установим Kibana для визуализации логов из Elasticsearch.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите Kibana:</li>
+                            <div class="code-block">
+                                <pre>
+helm install kibana elastic/kibana --namespace=logging
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте статус подов Kibana:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl get pods -n logging
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Настройте порт-форвардинг для доступа к Kibana:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl port-forward -n logging svc/kibana-kibana 5601:5601
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Откройте веб-браузер и перейдите по адресу <code>http://localhost:5601</code>.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Fluentd</button>
+                    <div class="sub-panel">
+                        <p>Установим Fluentd для сбора логов из подов Kubernetes и отправки их в Elasticsearch.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>fluentd-daemonset.yaml</code>:</li>
+                            <div class="code-block">
+                                <pre>
+nano fluentd-daemonset.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте следующий контент в файл:</li>
+                            <div class="code-block">
+                                <pre>
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd
+  namespace: logging
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: fluentd
+  template:
+    metadata:
+      labels:
+        name: fluentd
+    spec:
+      serviceAccountName: fluentd
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      containers:
+      - name: fluentd
+        image: fluent/fluentd-kubernetes-daemonset
+        env:
+        - name: FLUENT_ELASTICSEARCH_HOST
+          value: "elasticsearch-master.logging.svc.cluster.local"
+        - name: FLUENT_ELASTICSEARCH_PORT
+          value: "9200"
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+        </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение манифеста DaemonSet</h4>
+                            <ul>
+                                <li><code>DaemonSet</code>: Обеспечивает запуск одного экземпляра Fluentd на каждом узле
+                                    кластера.</li>
+                                <li><code>env</code>: Переменные окружения для подключения к Elasticsearch.</li>
+                                <li><code>volumes</code> и <code>volumeMounts</code>: Монтирование директорий для
+                                    доступа к логам контейнеров.</li>
+                            </ul>
+
+                            <li>Сохраните файл и выйдите из редактора.</li>
+                            <li>Примените манифест:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl apply -f fluentd-daemonset.yaml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте статус подов Fluentd:</li>
+                            <div class="code-block">
+                                <pre>
+kubectl get pods -n logging
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Убедитесь, что имена
+                                сервисов Elasticsearch и портов соответствуют вашим настройкам.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка установки стека EFK</h3>
+                <ul>
+                    <li>Elasticsearch, Fluentd и Kibana установлены и работают в Kubernetes-кластере.</li>
+                    <li>Вы можете получить доступ к интерфейсу Kibana через браузер.</li>
+                    <li>Логи из Kubernetes-кластера отображаются в Kibana.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html"
+                            target="_blank">Документация Elasticsearch</a></li>
+                    <li><a href="https://www.elastic.co/guide/en/kibana/current/index.html" target="_blank">Документация
+                            Kibana</a></li>
+                    <li><a href="https://docs.fluentd.org/" target="_blank">Документация Fluentd</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Продолжение изучения мониторинга и
+                логирования</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Теперь, когда вы настроили мониторинг и логирование для Kubernetes-кластера, рекомендуем продолжить
+                    изучение:</p>
+
+                <ul>
+                    <li>Изучите настройку оповещений в Prometheus и Grafana.</li>
+                    <li>Настройте метрики приложений и пользовательские дашборды в Grafana.</li>
+                    <li>Изучите использование оператора Prometheus для более сложных настроек.</li>
+                    <li>Рассмотрите альтернативы, такие как Loki для логирования и Tempo для трассировки.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://prometheus.io/docs/alerting/alertmanager/" target="_blank">Alertmanager в
+                            Prometheus</a></li>
+                    <li><a href="https://grafana.com/docs/grafana/latest/alerting/" target="_blank">Оповещения в
+                            Grafana</a></li>
+                    <li><a href="https://github.com/prometheus-operator/prometheus-operator" target="_blank">Prometheus
+                            Operator</a></li>
+                    <li><a href="https://grafana.com/oss/loki/" target="_blank">Grafana Loki для логирования</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../developer/ci_cd.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу
+                по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../developer/docker_kubernetes.html" class="button">Следующий шаг руководства: Разработчик: Docker
+                и Kubernetes <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="../devops/ci_cd_pipeline.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему
+                шагу по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="security_practices.html" class="button">Следующий шаг по роли: Практики безопасности <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

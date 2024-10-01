@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Мониторинг и обслуживание системы | Руководство для администратора</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item"><a href="os_installation.html">Установка и настройка ОС</a></li>
+            <li class="breadcrumb-item"><a href="network_configuration.html">Настройка сетевой инфраструктуры</a></li>
+            <li class="breadcrumb-item"><a href="user_management.html">Управление пользователями и правами доступа</a>
+            </li>
+            <li class="breadcrumb-item active">Мониторинг и обслуживание системы</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-tachometer-alt"></i> Мониторинг и обслуживание системы</h1>
+        <p><strong>Роль:</strong> Администратор</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Мониторинг системных ресурсов</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>В этом шаге мы рассмотрим, как отслеживать использование системных ресурсов, таких как процессор,
+                    память, дисковое пространство и сеть, используя встроенные и дополнительные инструменты в FreeBSD.
+                </p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Использование команды
+                        top</button>
+                    <div class="sub-panel">
+                        <p>Команда <code>top</code> отображает информацию о процессах, загруженности системы и
+                            использовании ресурсов в реальном времени.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте терминал на вашей виртуальной машине FreeBSD.</li>
+                            <li>Выполните команду:</li>
+                            <div class="code-block">
+                                <pre>
+top
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Вы увидите обновляемую таблицу процессов и использование ресурсов.</li>
+                            <li>Чтобы выйти из режима <code>top</code>, нажмите клавишу <strong>Q</strong>.</li>
+                        </ol>
+
+                        <h4>Объяснение вывода</h4>
+                        <ul>
+                            <li><strong>Load Average:</strong> Средняя нагрузка на систему за последние 1, 5 и 15 минут.
+                            </li>
+                            <li><strong>Processes:</strong> Общее количество запущенных процессов и их состояния.</li>
+                            <li><strong>CPU usage:</strong> Использование процессора системными и пользовательскими
+                                процессами.</li>
+                            <li><strong>Mem и Swap:</strong> Использование оперативной памяти и своп-раздела.</li>
+                            <li>Ниже отображается список процессов с информацией о потреблении ресурсов.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Использование утилиты
+                        htop</button>
+                    <div class="sub-panel">
+                        <p>Утилита <code>htop</code> предоставляет более удобный и наглядный интерфейс для мониторинга
+                            процессов и ресурсов.</p>
+
+                        <p><strong>Установка htop:</strong></p>
+                        <ol>
+                            <li>Установите <code>htop</code> с помощью пакета:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg install htop
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </ol>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Запустите <code>htop</code>:</li>
+                            <div class="code-block">
+                                <pre>
+htop
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Вы увидите цветную таблицу с использованием ресурсов и списком процессов.</li>
+                            <li>Для навигации используйте клавиши стрелок.</li>
+                            <li>Чтобы выйти из <code>htop</code>, нажмите клавишу <strong>F10</strong> или
+                                <strong>Q</strong>.
+                            </li>
+                        </ol>
+
+                        <h4>Преимущества htop</h4>
+                        <ul>
+                            <li>Цветовое отображение информации для лучшего восприятия.</li>
+                            <li>Возможность прокрутки списка процессов.</li>
+                            <li>Удобные клавиши быстрого доступа для управления процессами.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Мониторинг дискового
+                        пространства</button>
+                    <div class="sub-panel">
+                        <p>Важно отслеживать использование дискового пространства, чтобы избежать переполнения диска.
+                        </p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Выполните команду для отображения использования файловой системы:</li>
+                            <div class="code-block">
+                                <pre>
+df -h
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Вы увидите список файловых систем с информацией о размере, использовании и доступном
+                                пространстве.</li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>df</code>: Отображает информацию о файловых системах.</li>
+                            <li><code>-h</code>: Выводит информацию в удобном для чтения формате (человеко-читаемый
+                                вид).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 4 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Проверка использования
+                        памяти</button>
+                    <div class="sub-panel">
+                        <p>Для проверки использования оперативной памяти можно использовать команду <code>free</code>.
+                        </p>
+
+                        <p><strong>Установка команды free:</strong></p>
+                        <ol>
+                            <li>В FreeBSD команда <code>free</code> недоступна по умолчанию. Вместо неё используем
+                                команду <code>vmstat</code> или установим пакет <code>procps</code>:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg install procps
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </ol>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Выполните команду:</li>
+                            <div class="code-block">
+                                <pre>
+free -h
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Вы увидите информацию об использовании памяти в удобном формате.</li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>free</code>: Показывает информацию об использовании оперативной памяти.</li>
+                            <li><code>-h</code>: Вывод в человеко-читаемом формате.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 5 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Мониторинг сетевой
+                        активности</button>
+                    <div class="sub-panel">
+                        <p>Для мониторинга сетевой активности можно использовать команду <code>netstat</code> и другие
+                            утилиты.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Просмотреть активные сетевые подключения:</li>
+                            <div class="code-block">
+                                <pre>
+netstat -an
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Просмотреть статистику по сетевым интерфейсам:</li>
+                            <div class="code-block">
+                                <pre>
+netstat -i
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Для более подробного мониторинга можно установить утилиту <code>iftop</code>:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg install iftop
+                                </pre>
+                            </div>
+                            <li>Запустить <code>iftop</code> для просмотра трафика в реальном времени:</li>
+                            <div class="code-block">
+                                <pre>
+sudo iftop -i em0
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <ul>
+                                <li><code>-i em0</code>: Указывает интерфейс для мониторинга (замените <code>em0</code>
+                                    на ваш интерфейс).</li>
+                            </ul>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>netstat</code>: Показывает различные сетевые статистики.</li>
+                            <li><code>iftop</code>: Отображает сетевой трафик в реальном времени.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка мониторинга системных ресурсов</h3>
+                <ul>
+                    <li>Вы умеете использовать команды <code>top</code> и <code>htop</code> для мониторинга процессов.
+                    </li>
+                    <li>Вы можете проверять использование дискового пространства с помощью <code>df -h</code>.</li>
+                    <li>Вы знаете, как проверить использование памяти.</li>
+                    <li>Вы умеете мониторить сетевую активность с помощью <code>netstat</code> и <code>iftop</code>.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Настройка системных журналов</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Системные журналы (логи) помогают отслеживать события в системе и выявлять проблемы. В FreeBSD для
+                    этой цели используется служба <code>syslogd</code>.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Просмотр системных
+                        журналов</button>
+                    <div class="sub-panel">
+                        <p>Системные журналы хранятся в каталоге <code>/var/log/</code>.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Перейдите в каталог с журналами:</li>
+                            <div class="code-block">
+                                <pre>
+cd /var/log/
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Посмотрите список файлов журналов:</li>
+                            <div class="code-block">
+                                <pre>
+ls -l
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Ознакомьтесь с основными файлами:
+                                <ul>
+                                    <li><code>messages</code>: Общие системные сообщения.</li>
+                                    <li><code>security</code>: Сообщения, связанные с безопасностью.</li>
+                                    <li><code>maillog</code>: Журналы почтовых сервисов.</li>
+                                </ul>
+                            </li>
+                            <li>Просмотрите содержимое журнала <code>messages</code>:</li>
+                            <div class="code-block">
+                                <pre>
+sudo tail -f /var/log/messages
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Чтобы остановить просмотр, нажмите <strong>Ctrl + C</strong>.</li>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>tail -f</code>: Отображает последние строки файла и обновляет их в реальном
+                                времени.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка ротации
+                        журналов</button>
+                    <div class="sub-panel">
+                        <p>Ротация журналов позволяет ограничить размер файлов журналов и сохранять только актуальные
+                            записи.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Файл конфигурации для ротации журналов находится по пути
+                                <code>/etc/newsyslog.conf</code>.
+                            </li>
+                            <li>Откройте файл для просмотра:</li>
+                            <div class="code-block">
+                                <pre>
+sudo nano /etc/newsyslog.conf
+                                </pre>
+                            </div>
+                            <li>В файле указаны правила для каждого журнала, например:
+                                <div class="code-block">
+                                    <pre>
+/var/log/messages              644  7     100  *     J
+                                    </pre>
+                                </div>
+                                <ul>
+                                    <li><code>644</code>: Права доступа к файлу.</li>
+                                    <li><code>7</code>: Максимальное количество ротаций.</li>
+                                    <li><code>100</code>: Максимальный размер файла в килобайтах.</li>
+                                    <li><code>*</code>: Периодичность (звёздочка означает, что ротация происходит при
+                                        достижении размера или по сигналу).</li>
+                                    <li><code>J</code>: Сжимать ли архивы (J - сжимать с помощью bzip2).</li>
+                                </ul>
+                            </li>
+                            <li>При необходимости вы можете изменить настройки под свои нужды.</li>
+                            <li>Сохраните изменения и закройте файл.</li>
+                            <li>Для принудительной ротации журналов выполните команду:</li>
+                            <div class="code-block">
+                                <pre>
+sudo newsyslog
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команды</h4>
+                        <ul>
+                            <li><code>newsyslog</code>: Утилита для управления ротацией журналов в FreeBSD.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Настройка системных журналов</h3>
+                <ul>
+                    <li>Вы знаете, где находятся системные журналы.</li>
+                    <li>Вы умеете просматривать и анализировать журналы.</li>
+                    <li>Вы можете настроить ротацию журналов по своим потребностям.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Обновление системы</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Регулярное обновление системы и пакетов помогает поддерживать безопасность и стабильность системы.
+                </p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Обновление пакетов с помощью
+                        pkg</button>
+                    <div class="sub-panel">
+                        <p>Утилита <code>pkg</code> используется для управления пакетами в FreeBSD.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Обновите список доступных пакетов:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg update
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Обновите установленные пакеты до последних версий:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg upgrade
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Следуйте инструкциям на экране для завершения обновления.</li>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>pkg update</code>: Обновляет локальный кэш пакетов.</li>
+                            <li><code>pkg upgrade</code>: Обновляет установленные пакеты.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Обновление базовой
+                        системы</button>
+                    <div class="sub-panel">
+                        <p>Для обновления базовой системы FreeBSD используется утилита <code>freebsd-update</code>.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Проверьте доступные обновления системы:</li>
+                            <div class="code-block">
+                                <pre>
+sudo freebsd-update fetch
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Если обновления доступны, установите их:</li>
+                            <div class="code-block">
+                                <pre>
+sudo freebsd-update install
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>При обновлении ядра или системных компонентов может потребоваться перезагрузка системы.
+                            </li>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>freebsd-update fetch</code>: Проверяет наличие обновлений системы.</li>
+                            <li><code>freebsd-update install</code>: Устанавливает загруженные обновления.</li>
+                        </ul>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Перед обновлением
+                                системы рекомендуется сделать резервную копию важных данных.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Обновление системы</h3>
+                <ul>
+                    <li>Вы умеете обновлять установленные пакеты с помощью <code>pkg</code>.</li>
+                    <li>Вы знаете, как обновлять базовую систему с помощью <code>freebsd-update</code>.</li>
+                    <li>Вы понимаете важность регулярного обновления системы для поддержания безопасности.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Планирование задач с помощью
+                cron</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Для автоматизации задач в FreeBSD используется планировщик <code>cron</code>. Он позволяет запускать
+                    скрипты и команды по расписанию.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание задания cron</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте таблицу задач cron для редактирования:</li>
+                            <div class="code-block">
+                                <pre>
+crontab -e
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>В редакторе добавьте новую строку задания, например:
+                                <div class="code-block">
+                                    <pre>
+0 2 * * * /usr/local/bin/backup.sh
+                                    </pre>
+                                </div>
+                                <ul>
+                                    <li>Это задание будет запускать скрипт <code>backup.sh</code> каждый день в 2:00
+                                        ночи.</li>
+                                </ul>
+                            </li>
+                            <li>Сохраните изменения и выйдите из редактора.</li>
+                        </ol>
+
+                        <h4>Объяснение формата cron</h4>
+                        <ul>
+                            <li>Формат строки задания: <code>минуты часы день_месяца месяц день_недели команда</code>.
+                            </li>
+                            <li>Значение <code>*</code> означает "в любое значение этого поля".</li>
+                        </ul>
+
+                        <p><strong>Пример:</strong></p>
+                        <ul>
+                            <li><code>*/5 * * * * /path/to/script.sh</code>: Запускать скрипт каждые 5 минут.</li>
+                            <li><code>0 0 * * 0 /path/to/weekly.sh</code>: Запускать скрипт каждое воскресенье в
+                                полночь.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Просмотр и управление заданиями
+                        cron</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Просмотреть текущие задания cron:</li>
+                            <div class="code-block">
+                                <pre>
+crontab -l
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <li>Удалить все задания cron для текущего пользователя:</li>
+                            <div class="code-block">
+                                <pre>
+crontab -r
+                                </pre>
+                            </div>
+                            <li>Управлять заданиями других пользователей (требуются права root):</li>
+                            <div class="code-block">
+                                <pre>
+sudo crontab -u username -e
+                                </pre>
+                            </div>
+                            <ul>
+                                <li>Замените <code>username</code> на имя пользователя.</li>
+                            </ul>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>crontab -e</code>: Редактирует задания cron для текущего пользователя.</li>
+                            <li><code>crontab -l</code>: Отображает текущие задания.</li>
+                            <li><code>crontab -r</code>: Удаляет все задания cron для текущего пользователя.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Планирование задач с помощью cron</h3>
+                <ul>
+                    <li>Вы умеете создавать и редактировать задания cron.</li>
+                    <li>Вы понимаете формат расписания cron.</li>
+                    <li>Вы можете просматривать и управлять заданиями cron для пользователей.</li>
+                </ul>
+            </div>
+
+            <!-- Шаг 5 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 5: Резервное копирование данных</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Резервное копирование важно для предотвращения потери данных. В этом шаге мы рассмотрим базовые
+                    методы создания резервных копий в FreeBSD.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание простого скрипта
+                        резервного копирования</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте каталог для хранения резервных копий:</li>
+                            <div class="code-block">
+                                <pre>
+sudo mkdir /backup
+                                </pre>
+                            </div>
+                            <li>Создайте скрипт <code>backup.sh</code>:</li>
+                            <div class="code-block">
+                                <pre>
+sudo nano /usr/local/bin/backup.sh
+                                </pre>
+                            </div>
+                            <li>Добавьте следующий контент в скрипт:
+                                <div class="code-block">
+                                    <pre>
+#!/bin/sh
+tar -czvf /backup/home_$(date +%F).tar.gz /home
+                                    </pre>
+                                </div>
+                                <ul>
+                                    <li>Скрипт создаёт архив каталога <code>/home</code> с текущей датой в имени файла.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>Сохраните и закройте файл.</li>
+                            <li>Сделайте скрипт исполняемым:</li>
+                            <div class="code-block">
+                                <pre>
+sudo chmod +x /usr/local/bin/backup.sh
+                                </pre>
+                            </div>
+                            <li>Запустите скрипт вручную для проверки:</li>
+                            <div class="code-block">
+                                <pre>
+sudo /usr/local/bin/backup.sh
+                                </pre>
+                            </div>
+                            <li>Проверьте, что файл резервной копии создан в каталоге <code>/backup</code>:</li>
+                            <div class="code-block">
+                                <pre>
+ls -l /backup
+                                </pre>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение скрипта</h4>
+                        <ul>
+                            <li><code>#!/bin/sh</code>: Указывает интерпретатор для скрипта.</li>
+                            <li><code>tar -czvf</code>: Команда для создания сжатого архива.</li>
+                            <li><code>$(date +%F)</code>: Вставляет текущую дату в формате ГГГГ-ММ-ДД.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Автоматизация резервного
+                        копирования с помощью cron</button>
+                    <div class="sub-panel">
+                        <p>Теперь добавим наше задание в cron для автоматического выполнения.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте таблицу задач cron:</li>
+                            <div class="code-block">
+                                <pre>
+sudo crontab -e
+                                </pre>
+                            </div>
+                            <li>Добавьте строку для ежедневного запуска скрипта в 3:00 утра:
+                                <div class="code-block">
+                                    <pre>
+0 3 * * * /usr/local/bin/backup.sh
+                                    </pre>
+                                </div>
+                            </li>
+                            <li>Сохраните изменения и выйдите из редактора.</li>
+                        </ol>
+
+                        <p>Теперь скрипт будет автоматически выполняться каждую ночь в 3:00.</p>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Резервное копирование данных</h3>
+                <ul>
+                    <li>Вы умеете создавать простые скрипты резервного копирования.</li>
+                    <li>Вы можете автоматизировать задачи резервного копирования с помощью cron.</li>
+                    <li>Вы понимаете важность регулярного резервного копирования данных.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="user_management.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу по
+                руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="security_practices.html" class="button">Следующий шаг руководства: Администратор: Практики
+                безопасности <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="user_management.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему шагу по
+                роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="security_practices.html" class="button">Следующий шаг по роли: Практики безопасности <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+        div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>

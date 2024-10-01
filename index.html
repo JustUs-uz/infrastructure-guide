@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Руководство по построению инфраструктуры</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <header class="fixed-nav">
+        <h1><i class="fas fa-server"></i> Руководство по построению инфраструктуры</h1>
+    </header>
+
+    <main>
+        <!-- Введение -->
+        <section class="intro-section">
+            <div class="intro-container">
+                <div class="intro-image">
+                    <img src="assets/images/architecture_diagram.png" alt="Схема архитектуры проекта">
+                </div>
+                <div class="intro-text">
+                    <h2 class="padding-bottom">Добро пожаловать!</h2>
+                    <p>Это подробное руководство поможет вам шаг за шагом создать современную, масштабируемую и
+                        безопасную
+                        инфраструктуру для веб-приложений. Независимо от вашего уровня подготовки, вы сможете освоить
+                        использование
+                        таких технологий, как <strong>FreeBSD</strong>, <strong>Docker</strong>,
+                        <strong>Kubernetes</strong>,
+                        <strong>TypeScript</strong>, <strong>CI/CD</strong>, <strong>Prometheus</strong> и многих
+                        других.
+                    </p>
+
+                    <!-- Сворачиваемый список технологий -->
+                    <details>
+                        <summary><strong>Описание Стека Технологий.</strong></summary>
+                        <ul class="tech-list">
+                            <li><strong>FreeBSD:</strong> стабильная и безопасная операционная система для серверов.
+                            </li>
+                            <li><strong>Docker:</strong> позволяет контейнеризировать приложения для их независимого
+                                запуска.</li>
+                            <li><strong>Neo4j:</strong> графовая база данных для хранения и обработки связанных данных.
+                            </li>
+                            <li><strong>Kubernetes (Minikube):</strong> система оркестрации контейнеров для управления
+                                приложениями в кластере.</li>
+                            <li><strong>Traefik:</strong> динамический обратный прокси и Ingress Controller для
+                                маршрутизации трафика в Kubernetes с поддержкой HTTP/3.</li>
+                            <li><strong>GitHub Actions:</strong> платформа для автоматизации рабочих процессов CI/CD.
+                            </li>
+                            <li><strong>Visual Studio Code:</strong> современная среда разработки с поддержкой
+                                TypeScript и расширениями для разработки и отладки.</li>
+                            <li><strong>TypeScript:</strong> язык программирования, расширяющий JavaScript, с поддержкой
+                                статической типизации.</li>
+                            <li><strong>Gulp:</strong> инструмент для автоматизации задач разработки, таких как сборка,
+                                компиляция и обновление проекта в реальном времени.</li>
+                            <li><strong>Pug:</strong> шаблонизатор для HTML, позволяющий писать более чистый и понятный
+                                код разметки.</li>
+                            <li><strong>Sass:</strong> препроцессор CSS, добавляющий возможности переменных, вложенности
+                                и функций для более эффективной разработки стилей.</li>
+                            <li><strong>Prometheus и Grafana:</strong> инструменты для мониторинга и визуализации
+                                метрик.</li>
+                            <li><strong>ELK Stack:</strong> решения для сбора, хранения и анализа логов.</li>
+                            <li><strong>Velero:</strong> инструмент для резервного копирования и восстановления
+                                Kubernetes-кластеров.</li>
+                            <li><strong>pf (брандмауэр):</strong> для защиты сетевой инфраструктуры.</li>
+                            <li><strong>Lynis:</strong> инструмент для аудита безопасности системы.</li>
+                        </ul>
+                    </details>
+
+                    <p>Мы постарались сделать это руководство максимально понятным и доступным, чтобы вы могли не только
+                        повторить
+                        все шаги, но и понять, как и почему это работает. Начните свой путь к созданию профессиональной
+                        инфраструктуры прямо сейчас!</p>
+                    <div class="info-block">
+                        <p><strong><i class="fas fa-info-circle"></i> Примечание:</strong> Рекомендуется иметь базовые
+                            знания в
+                            области программирования и работы с командной строкой, однако даже новички смогут
+                            разобраться благодаря
+                            подробным инструкциям.</p>
+                    </div>
+
+                    <!-- Порядок выполнения шагов руководства -->
+                    <section>
+                        <h2 class="padding-top">Порядок выполнения шагов руководства</h2>
+                        <button class="accordion"><i class="fas fa-list-ul"></i> Просмотреть все шаги</button>
+                        <div class="panel">
+                            <ol>
+
+                                <!-- Администратор: Введение -->
+                                <li><a href="admin/introduction.html">Администратор: Введение</a></li>
+
+                                <!-- Разработчик: Введение -->
+                                <li><a href="developer/introduction.html">Разработчик: Введение</a></li>
+
+                                <!-- DevOps: Введение -->
+                                <li><a href="devops/introduction.html">DevOps: Введение</a></li>
+
+                                <!-- Администратор: Установка и настройка операционной системы -->
+                                <li><a href="admin/os_installation.html">Администратор: Установка и настройка
+                                        операционной системы</a></li>
+
+                                <!-- Администратор: Настройка сетевой инфраструктуры -->
+                                <li><a href="admin/network_configuration.html">Администратор: Настройка сетевой
+                                        инфраструктуры</a></li>
+
+                                <!-- Разработчик: Подготовка среды разработки -->
+                                <li><a href="developer/preparation.html">Разработчик: Подготовка среды разработки</a>
+                                </li>
+
+                                <!-- DevOps: Контейнеризация и оркестрация -->
+                                <li><a href="devops/containerization.html">DevOps: Контейнеризация и оркестрация</a>
+                                </li>
+
+                                <!-- Разработчик: Работа с кодом -->
+                                <li><a href="developer/work_with_code.html">Разработчик: Работа с кодом</a></li>
+
+                                <!-- DevOps: Настройка Kubernetes -->
+                                <li><a href="devops/kubernetes_setup.html">DevOps: Настройка Kubernetes</a></li>
+
+                                <!-- DevOps: Настройка Traefik в Kubernetes -->
+                                <li><a href="devops/traefik_configuration.html">DevOps: Настройка Traefik в
+                                        Kubernetes</a></li>
+
+                                <!-- DevOps: Настройка CI/CD пайплайна -->
+                                <li><a href="devops/ci_cd_pipeline.html">DevOps: Настройка CI/CD пайплайна</a></li>
+
+                                <!-- Разработчик: CI/CD для разработчиков -->
+                                <li><a href="developer/ci_cd.html">Разработчик: CI/CD для разработчиков</a></li>
+
+                                <!-- DevOps: Мониторинг и логирование -->
+                                <li><a href="devops/monitoring_logging.html">DevOps: Мониторинг и логирование</a></li>
+
+                                <!-- Разработчик: Docker и Kubernetes -->
+                                <li><a href="developer/docker_kubernetes.html">Разработчик: Docker и Kubernetes</a></li>
+
+                                <!-- Администратор: Управление пользователями и правами доступа -->
+                                <li><a href="admin/user_management.html">Администратор: Управление пользователями и
+                                        правами доступа</a></li>
+
+                                <!-- Администратор: Мониторинг и обслуживание системы -->
+                                <li><a href="admin/system_monitoring.html">Администратор: Мониторинг и обслуживание
+                                        системы</a></li>
+
+                                <!-- Администратор: Практики безопасности -->
+                                <li><a href="admin/security_practices.html">Администратор: Практики безопасности</a>
+                                </li>
+
+                                <!-- DevOps: Практики безопасности -->
+                                <li><a href="devops/security_practices.html">DevOps: Практики безопасности</a></li>
+
+                                <!-- Администратор: Завершение и дальнейшие шаги -->
+                                <li><a href="admin/conclusion.html">Администратор: Завершение и дальнейшие шаги</a></li>
+
+                                <!-- Разработчик: Заключение -->
+                                <li><a href="developer/conclusion.html">Разработчик: Заключение</a></li>
+
+                                <!-- DevOps: Завершение и дальнейшие шаги -->
+                                <li><a href="devops/conclusion.html">DevOps: Завершение и дальнейшие шаги</a></li>
+                            </ol>
+                        </div>
+                    </section>
+
+                </div>
+        </section>
+
+        <!-- Навигация по ролям -->
+        <section>
+            <h2>Навигация по ролям</h2>
+            <div class="roles-container">
+
+                <!-- Администратор -->
+                <div class="role-column">
+                    <button class="accordion"><i class="role-icon icon-admin"></i> Администратор</button>
+                    <div class="panel">
+                        <ul>
+                            <li><a href="admin/introduction.html">Введение</a></li>
+                            <li><a href="admin/os_installation.html">Установка и настройка операционной системы</a></li>
+                            <li><a href="admin/network_configuration.html">Настройка сетевой инфраструктуры</a></li>
+                            <li><a href="admin/user_management.html">Управление пользователями и правами доступа</a>
+                            </li>
+                            <li><a href="admin/system_monitoring.html">Мониторинг и обслуживание системы</a></li>
+                            <li><a href="admin/security_practices.html">Практики безопасности</a></li>
+                            <li><a href="admin/conclusion.html">Завершение и дальнейшие шаги</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Разработчик -->
+                <div class="role-column">
+                    <button class="accordion"><i class="role-icon icon-developer"></i> Разработчик</button>
+                    <div class="panel">
+                        <ul>
+                            <li><a href="developer/introduction.html">Введение</a></li>
+                            <li><a href="developer/preparation.html">Подготовка среды разработки</a></li>
+                            <li><a href="developer/work_with_code.html">Работа с кодом</a></li>
+                            <li><a href="developer/ci_cd.html">CI/CD для разработчиков</a></li>
+                            <li><a href="developer/docker_kubernetes.html">Docker и Kubernetes</a></li>
+                            <li><a href="developer/conclusion.html">Заключение</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- DevOps -->
+                <div class="role-column">
+                    <button class="accordion"><i class="role-icon icon-devops"></i> DevOps</button>
+                    <div class="panel">
+                        <ul>
+                            <li><a href="devops/introduction.html">Введение</a></li>
+                            <li><a href="devops/containerization.html">Контейнеризация и оркестрация</a></li>
+                            <li><a href="devops/kubernetes_setup.html">Настройка Kubernetes</a></li>
+                            <li><a href="devops/traefik_configuration.html">Настройка Traefik в Kubernetes</a></li>
+                            <li><a href="devops/ci_cd_pipeline.html">Настройка CI/CD пайплайна</a></li>
+                            <li><a href="devops/monitoring_logging.html">Мониторинг и логирование</a></li>
+                            <li><a href="devops/security_practices.html">Практики безопасности</a></li>
+                            <li><a href="devops/conclusion.html">Завершение и дальнейшие шаги</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Секция с требованиями и предварительными условиями -->
+        <section>
+            <h2>Требования и Предварительные Условия</h2>
+            <div class="requirements-container">
+                <div class="requirement-column">
+                    <h3>Аппаратные Требования</h3>
+                    <ul>
+                        <li>Компьютер с Windows 11 Home Edition.</li>
+                        <li>Минимум 16 ГБ оперативной памяти (рекомендуется 32 ГБ для комфортной работы).</li>
+                        <li>Достаточное количество свободного дискового пространства (рекомендуется не менее 100 ГБ).
+                        </li>
+                        <li>Поддержка виртуализации на уровне BIOS (Intel VT-x или AMD-V).</li>
+                    </ul>
+                </div>
+                <div class="requirement-column">
+                    <h3>Необходимые Учетные Записи</h3>
+                    <ul>
+                        <li>GitHub: для хранения исходного кода и настройки GitHub Actions.</li>
+                        <li>Docker Hub: для хранения Docker-образов.</li>
+                        <li>Учетная запись Let's Encrypt (опционально): для получения SSL-сертификатов.</li>
+                        <li>Учетная запись в облачном хранилище (AWS, GCP, Azure и т.д.): для резервного копирования с
+                            Velero.</li>
+                    </ul>
+                </div>
+                <div class="requirement-column">
+                    <h3>Сетевые Требования</h3>
+                    <ul>
+                        <li>Стабильное подключение к интернету.</li>
+                        <li>Возможность открыть необходимые порты на роутере (22, 80, 443 и другие по необходимости).
+                        </li>
+                        <li>Доменное имя для доступа к вашему приложению.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Стек используемых технологий -->
+        <!-- Этот раздел теперь описан внутри введения и не требуется отдельно -->
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>

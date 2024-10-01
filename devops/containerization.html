@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Контейнеризация приложений | Руководство по DevOps</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="../assets/fonts/fontawesome/css/all.min.css">
+</head>
+
+<body>
+    <!-- Навигация (хлебные крошки) -->
+    <nav class="breadcrumb">
+        <ul>
+            <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
+            <li class="breadcrumb-item"><a href="infrastructure.html">Подготовка инфраструктуры</a></li>
+            <li class="breadcrumb-item active">Контейнеризация приложений</li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1><i class="fas fa-docker"></i> Контейнеризация приложений</h1>
+        <p><strong>Роль:</strong> DevOps</p>
+        <p><strong>Уровень:</strong> Начинающий</p>
+
+        <!-- Содержание -->
+        <section>
+            <!-- Главный шаг 1 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 1: Установка Docker на FreeBSD</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Docker — это платформа для разработки, доставки и запуска приложений в контейнерах. В этом шаге мы
+                    установим Docker на FreeBSD, чтобы начать контейнеризацию наших приложений.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Установленная и настроенная система FreeBSD.</li>
+                    <li>Пользователь с правами суперпользователя (возможность использовать <code>sudo</code>).</li>
+                    <li>Доступ к интернету с виртуальной машины.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Docker</button>
+                    <div class="sub-panel">
+                        <p>На FreeBSD Docker доступен через порт <code>sysutils/docker</code> и пакетный менеджер
+                            <code>pkg</code>.
+                        </p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Обновите базу данных пакетов:</li>
+                            <div class="code-block">
+                                <pre>
+pkg update
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Установите Docker и его зависимости:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg install -y docker
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <h4>Объяснение команды</h4>
+                            <ul>
+                                <li><code>pkg install</code>: Команда для установки пакета.</li>
+                                <li><code>-y</code>: Автоматически отвечает «Yes» на все запросы подтверждения.</li>
+                                <li><code>docker</code>: Имя пакета Docker.</li>
+                            </ul>
+                            <li>Добавьте Docker в автозапуск:</li>
+                            <div class="code-block">
+                                <pre>
+sudo sysrc docker_enable="YES"
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Запустите службу Docker:</li>
+                            <div class="code-block">
+                                <pre>
+sudo service docker start
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> На момент написания
+                                данного руководства, поддержка Docker на FreeBSD является экспериментальной и может
+                                иметь ограничения. Рекомендуется использовать Linux-системы для полной функциональности
+                                Docker.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Проверка установки
+                        Docker</button>
+                    <div class="sub-panel">
+                        <p>Проверим, что Docker установлен и работает корректно.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Выполните команду для проверки версии Docker:</li>
+                            <div class="code-block">
+                                <pre>
+docker --version
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Вывод должен содержать информацию о версии Docker.</li>
+                            <li>Запустите тестовый контейнер:</li>
+                            <div class="code-block">
+                                <pre>
+sudo docker run hello-world
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Если всё работает правильно, вы увидите сообщение от Docker с подтверждением успешного
+                                запуска контейнера.</li>
+                        </ol>
+
+                        <details>
+                            <summary><strong>Проблемы с запуском Docker</strong></summary>
+                            <p><strong>Решение:</strong></p>
+                            <ul>
+                                <li>Убедитесь, что служба Docker запущена.</li>
+                                <li>Проверьте наличие ошибок в логах: <code>/var/log/docker.log</code>.</li>
+                                <li>Убедитесь, что ваш пользователь имеет права на выполнение команд Docker или
+                                    используйте <code>sudo</code>.</li>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка установки Docker</h3>
+                <ul>
+                    <li>Команда <code>docker --version</code> выводит версию Docker без ошибок.</li>
+                    <li>Тестовый контейнер <code>hello-world</code> запускается успешно.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://docs.docker.com/" target="_blank">Официальная документация Docker</a></li>
+                    <li><a href="https://wiki.freebsd.org/Docker" target="_blank">Docker на FreeBSD</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 2 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 2: Установка Docker Compose</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Docker Compose — это инструмент для определения и запуска многоконтейнерных Docker-приложений с
+                    помощью файлов <code>docker-compose.yml</code>.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Установка Docker Compose</button>
+                    <div class="sub-panel">
+                        <p>На FreeBSD Docker Compose можно установить с помощью <code>pip</code> — пакетного менеджера
+                            Python.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Установите <code>pip</code> и необходимые зависимости:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pkg install -y py37-pip
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Установите Docker Compose с помощью <code>pip</code>:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pip install docker-compose
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте версию Docker Compose:</li>
+                            <div class="code-block">
+                                <pre>
+docker-compose --version
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <h4>Объяснение команд</h4>
+                        <ul>
+                            <li><code>py37-pip</code>: Пакет <code>pip</code> для Python 3.7.</li>
+                            <li><code>pip install docker-compose</code>: Устанавливает Docker Compose через
+                                <code>pip</code>.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Проверка установки Docker
+                        Compose</button>
+                    <div class="sub-panel">
+                        <p>Убедимся, что Docker Compose установлен и работает корректно.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Выполните команду:</li>
+                            <div class="code-block">
+                                <pre>
+docker-compose --version
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Вывод должен содержать информацию о версии Docker Compose.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка установки Docker Compose</h3>
+                <ul>
+                    <li>Команда <code>docker-compose --version</code> выводит версию Docker Compose без ошибок.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://docs.docker.com/compose/" target="_blank">Официальная документация Docker
+                            Compose</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 3 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 3: Настройка окружения для Docker</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Настроим окружение и убедимся, что Docker и Docker Compose готовы к работе.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Добавление пользователя в группу
+                        docker</button>
+                    <div class="sub-panel">
+                        <p>Чтобы не использовать <code>sudo</code> при каждой команде Docker, добавим нашего
+                            пользователя в группу <code>docker</code>.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте группу <code>docker</code> (если она ещё не создана):</li>
+                            <div class="code-block">
+                                <pre>
+sudo pw groupadd docker
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте своего пользователя в группу <code>docker</code>:</li>
+                            <div class="code-block">
+                                <pre>
+sudo pw groupmod docker -m yourusername
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Перезапустите службу Docker:</li>
+                            <div class="code-block">
+                                <pre>
+sudo service docker restart
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Выйдите из системы и войдите снова, чтобы изменения вступили в силу.</li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Добавление пользователя
+                                в группу <code>docker</code> предоставляет ему привилегии суперпользователя в контексте
+                                Docker. Убедитесь, что это безопасно в вашем окружении.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Тестирование Docker без
+                        sudo</button>
+                    <div class="sub-panel">
+                        <p>Проверим, что можем выполнять команды Docker без использования <code>sudo</code>.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Выполните команду:</li>
+                            <div class="code-block">
+                                <pre>
+docker ps
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Команда должна выполниться без ошибок и вывести список запущенных контейнеров (в данном
+                                случае список будет пустым).</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка окружения Docker</h3>
+                <ul>
+                    <li>Ваш пользователь добавлен в группу <code>docker</code>.</li>
+                    <li>Команды Docker выполняются без <code>sudo</code>.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 4 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 4: Установка Traefik для маршрутизации
+                трафика</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Traefik — это современный обратный прокси-сервер и балансировщик нагрузки, разработанный специально
+                    для микросервисов. Мы установим Traefik с помощью Docker Compose для маршрутизации трафика в наших
+                    контейнерах.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание файлов конфигурации
+                        Traefik</button>
+                    <div class="sub-panel">
+                        <p>Создадим необходимые файлы для настройки Traefik.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте директорию для Traefik:</li>
+                            <div class="code-block">
+                                <pre>
+mkdir ~/traefik
+cd ~/traefik
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте файл <code>traefik.toml</code> для конфигурации Traefik:</li>
+                            <div class="code-block">
+                                <pre>
+nano traefik.toml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте следующий контент в файл <code>traefik.toml</code>:</li>
+                            <div class="code-block">
+                                <pre>
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+
+[api]
+  dashboard = true
+
+[providers.docker]
+  endpoint = "unix:///var/run/docker.sock"
+  exposedByDefault = false
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <h4>Объяснение конфигурации</h4>
+                            <ul>
+                                <li><code>[entryPoints]</code>: Определяет точки входа для Traefik.</li>
+                                <li><code>address = ":80"</code>: Traefik слушает на порту 80.</li>
+                                <li><code>[api]</code>: Включает информационную панель Traefik.</li>
+                                <li><code>[providers.docker]</code>: Настройка провайдера Docker.</li>
+                                <li><code>exposedByDefault = false</code>: Контейнеры не будут автоматически
+                                    обнаруживаться, если не указано явно.</li>
+                            </ul>
+                            <li>Сохраните файл и выйдите из редактора.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание файла
+                        docker-compose.yml</button>
+                    <div class="sub-panel">
+                        <p>Создадим файл <code>docker-compose.yml</code> для запуска Traefik с помощью Docker Compose.
+                        </p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте файл <code>docker-compose.yml</code>:</li>
+                            <div class="code-block">
+                                <pre>
+nano docker-compose.yml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте следующий контент в файл:</li>
+                            <div class="code-block">
+                                <pre>
+version: "3.7"
+
+services:
+  traefik:
+    image: traefik:v2.4
+    command:
+      - "--configFile=/traefik.toml"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "./traefik.toml:/traefik.toml"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <h4>Объяснение файла docker-compose.yml</h4>
+                            <ul>
+                                <li><code>services</code>: Определяет сервисы для запуска.</li>
+                                <li><code>image: traefik:v2.4</code>: Используем образ Traefik версии 2.4.</li>
+                                <li><code>ports</code>: Пробрасываем порты 80 и 8080.</li>
+                                <li><code>volumes</code>: Монтируем файл конфигурации и сокет Docker.</li>
+                                <li><code>networks</code>: Подключаемся к сети <code>web</code>.</li>
+                            </ul>
+                            <li>Сохраните файл и выйдите из редактора.</li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Убедитесь, что сеть
+                                <code>web</code> существует. Если нет, создайте её командой
+                                <code>docker network create web</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Запуск Traefik с помощью Docker
+                        Compose</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте сеть <code>web</code>, если она ещё не создана:</li>
+                            <div class="code-block">
+                                <pre>
+docker network create web
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Запустите Traefik в фоновом режиме:</li>
+                            <div class="code-block">
+                                <pre>
+docker-compose up -d
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте, что контейнер Traefik запущен:</li>
+                            <div class="code-block">
+                                <pre>
+docker ps
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 4 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Доступ к информационной панели
+                        Traefik</button>
+                    <div class="sub-panel">
+                        <p>Информационная панель Traefik доступна на порту 8080.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте веб-браузер на хостовой машине (Windows 11).</li>
+                            <li>Перейдите по адресу <code>http://IP-адрес-виртуальной-машины:8080</code>.</li>
+                            <li>Вы должны увидеть информационную панель Traefik.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка работы Traefik</h3>
+                <ul>
+                    <li>Контейнер Traefik запущен и отображается в списке <code>docker ps</code>.</li>
+                    <li>Информационная панель Traefik доступна по указанному адресу.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://doc.traefik.io/traefik/" target="_blank">Официальная документация Traefik</a>
+                    </li>
+                    <li><a href="https://doc.traefik.io/traefik/providers/docker/" target="_blank">Traefik с провайдером
+                            Docker</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 5 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 5: Настройка маршрутизации для приложения
+                через Traefik</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Настроим наше приложение так, чтобы трафик к нему маршрутизировался через Traefik.</p>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание тестового
+                        приложения</button>
+                    <div class="sub-panel">
+                        <p>Запустим простое приложение в контейнере, которое будет обслуживаться через Traefik.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте директорию для приложения:</li>
+                            <div class="code-block">
+                                <pre>
+mkdir ~/whoami
+cd ~/whoami
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте файл <code>docker-compose.yml</code>:</li>
+                            <div class="code-block">
+                                <pre>
+nano docker-compose.yml
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте следующий контент в файл:</li>
+                            <div class="code-block">
+                                <pre>
+version: "3.7"
+
+services:
+  whoami:
+    image: traefik/whoami
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`yourdomain.com`)"
+      - "traefik.http.routers.whoami.entrypoints=http"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <h4>Объяснение файла docker-compose.yml</h4>
+                            <ul>
+                                <li><code>image: traefik/whoami</code>: Используем образ тестового приложения от
+                                    Traefik.</li>
+                                <li><code>labels</code>: Указываем Traefik, как маршрутизировать трафик к этому сервису.
+                                </li>
+                                <li><code>traefik.enable=true</code>: Включаем обнаружение сервиса Traefik.</li>
+                                <li><code>traefik.http.routers.whoami.rule=Host(`yourdomain.com`)</code>: Определяем
+                                    правило маршрутизации по домену.</li>
+                                <li><code>traefik.http.routers.whoami.entrypoints=http</code>: Используем точку входа
+                                    HTTP.</li>
+                            </ul>
+                            <li>Замените <code>yourdomain.com</code> на IP-адрес вашей виртуальной машины или
+                                настроенное доменное имя.</li>
+                            <li>Сохраните файл и выйдите из редактора.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Запуск приложения</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Запустите приложение:</li>
+                            <div class="code-block">
+                                <pre>
+docker-compose up -d
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте, что контейнер запущен:</li>
+                            <div class="code-block">
+                                <pre>
+docker ps
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Тестирование
+                        маршрутизации</button>
+                    <div class="sub-panel">
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте веб-браузер на хостовой машине.</li>
+                            <li>Перейдите по адресу <code>http://yourdomain.com</code> или
+                                <code>http://IP-адрес-виртуальной-машины</code>, если используете IP.
+                            </li>
+                            <li>Вы должны увидеть информацию от сервиса <code>whoami</code>, содержащую детали запроса.
+                            </li>
+                        </ol>
+
+                        <details>
+                            <summary><strong>Проблемы с доступом к приложению</strong></summary>
+                            <p><strong>Решение:</strong></p>
+                            <ul>
+                                <li>Убедитесь, что Traefik обнаружил сервис на информационной панели.</li>
+                                <li>Проверьте корректность меток (labels) в файле <code>docker-compose.yml</code>.</li>
+                                <li>Убедитесь, что DNS-запись для домена указывает на IP-адрес виртуальной машины или
+                                    используйте файл hosts на вашей хостовой машине для тестирования.</li>
+                            </ul>
+                        </details>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Проверка маршрутизации через Traefik</h3>
+                <ul>
+                    <li>Приложение <code>whoami</code> запущено и отображается в списке <code>docker ps</code>.</li>
+                    <li>Traefik обнаружил приложение и маршрутизирует к нему трафик.</li>
+                    <li>Доступ к приложению осуществляется через указанный домен или IP-адрес.</li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 6 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 6: Продолжение изучения Docker и
+                Traefik</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Теперь, когда вы познакомились с установкой Docker, Docker Compose и Traefik на FreeBSD, рекомендуем
+                    продолжить изучение:</p>
+
+                <ul>
+                    <li>Изучите более сложные конфигурации Traefik, включая HTTPS и SSL-сертификаты.</li>
+                    <li>Настройте автоматическое получение SSL-сертификатов с помощью Let's Encrypt.</li>
+                    <li>Изучите интеграцию Traefik с Kubernetes.</li>
+                    <li>Изучите управление многоконтейнерными приложениями с помощью Docker Compose и Docker Swarm.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://doc.traefik.io/traefik/https/acme/" target="_blank">Traefik и Let's Encrypt</a>
+                    </li>
+                    <li><a href="https://doc.traefik.io/traefik/providers/kubernetes-ingress/" target="_blank">Traefik в
+                            Kubernetes</a></li>
+                </ul>
+            </div>
+
+            <!-- Главный шаг 7 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 7: Установка и настройка Neo4j с
+                использованием Docker</button>
+            <div class="panel">
+                <p><strong>На какой машине:</strong> Удалённая машина (FreeBSD виртуальная машина)</p>
+
+                <h3>Описание</h3>
+                <p>Neo4j — это высокопроизводительная графовая база данных, которая позволяет хранить и обрабатывать
+                    данные в виде вершин и ребер. В этом шаге мы установим и настроим Neo4j с использованием Docker,
+                    чтобы интегрировать ее в наше приложение.</p>
+
+                <h3>Предварительные требования</h3>
+                <ul>
+                    <li>Установленный Docker и Docker Compose на вашей FreeBSD машине.</li>
+                    <li>Базовое понимание Docker и Docker Compose.</li>
+                </ul>
+
+                <!-- Подшаги -->
+                <div class="sub-steps">
+                    <!-- Подшаг 1 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Создание файла docker-compose.yml
+                        для Neo4j</button>
+                    <div class="sub-panel">
+                        <p>Мы создадим отдельный файл <code>docker-compose.yml</code> для Neo4j или добавим сервис Neo4j
+                            в существующий файл Compose, если вы используете общий стек.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Создайте директорию для Neo4j:</li>
+                            <div class="code-block">
+                                <pre>
+mkdir ~/neo4j
+cd ~/neo4j
+                    </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте файл <code>docker-compose.yml</code>:</li>
+                            <div class="code-block">
+                                <pre>
+nano docker-compose.yml
+                    </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Добавьте следующий контент в файл:</li>
+                            <div class="code-block">
+                                <pre>
+version: '3.7'
+
+services:
+neo4j:
+image: neo4j:4.4
+container_name: neo4j
+environment:
+- NEO4J_AUTH=neo4j/testpassword
+- NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+volumes:
+- ./data:/data
+- ./logs:/logs
+- ./import:/import
+- ./plugins:/plugins
+ports:
+- "7474:7474"
+- "7687:7687"
+networks:
+- neo4j-network
+
+networks:
+neo4j-network:
+driver: bridge
+                    </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+
+                            <h4>Объяснение файла docker-compose.yml</h4>
+                            <ul>
+                                <li><code>image: neo4j:4.4</code>: Используем образ Neo4j версии 4.4.</li>
+                                <li><code>NEO4J_AUTH=neo4j/testpassword</code>: Устанавливаем пароль для пользователя
+                                    <code>neo4j</code>. Замените <code>testpassword</code> на надёжный пароль.</li>
+                                <li><code>volumes</code>: Монтируем директории для хранения данных, логов и плагинов.
+                                </li>
+                                <li><code>ports</code>: Пробрасываем порты 7474 (HTTP интерфейс) и 7687 (Bolt протокол).
+                                </li>
+                                <li><code>networks</code>: Создаём отдельную сеть для Neo4j.</li>
+                            </ul>
+
+                            <div class="info-block">
+                                <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Не забудьте
+                                    заменить <code>testpassword</code> на надёжный пароль для производственной среды.
+                                </p>
+                            </div>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 2 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Запуск контейнера Neo4j</button>
+                    <div class="sub-panel">
+                        <p>Теперь мы можем запустить Neo4j с помощью Docker Compose.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Запустите контейнер в фоновом режиме:</li>
+                            <div class="code-block">
+                                <pre>
+docker-compose up -d
+                    </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Проверьте статус контейнера:</li>
+                            <div class="code-block">
+                                <pre>
+docker ps
+                    </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Вы должны увидеть контейнер <code>neo4j</code> в списке запущенных контейнеров.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Подшаг 3 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Доступ к веб-интерфейсу
+                        Neo4j</button>
+                    <div class="sub-panel">
+                        <p>Веб-интерфейс Neo4j позволяет взаимодействовать с базой данных через браузер.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Откройте веб-браузер на вашей хостовой машине.</li>
+                            <li>Перейдите по адресу <code>http://IP-адрес-виртуальной-машины:7474</code>.</li>
+                            <li>Вы должны увидеть страницу приветствия Neo4j Browser.</li>
+                            <li>Войдите, используя имя пользователя <code>neo4j</code> и пароль, который вы указали в
+                                файле <code>docker-compose.yml</code> (по нашему примеру <code>testpassword</code>).
+                            </li>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Примечание:</strong> Если вы
+                                используете Traefik для маршрутизации, вам может потребоваться настроить маршрутизацию
+                                для портов Neo4j или использовать прямой доступ по IP и порту.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 4 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Интеграция Neo4j с вашим
+                        приложением</button>
+                    <div class="sub-panel">
+                        <p>Теперь, когда Neo4j запущен, вы можете настроить ваше приложение для подключения к базе
+                            данных.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>Убедитесь, что ваше приложение находится в той же сети Docker, что и Neo4j. Например,
+                                добавьте ваше приложение в сеть <code>neo4j-network</code> в файле
+                                <code>docker-compose.yml</code> вашего приложения.</li>
+                            <li>В настройках вашего приложения укажите следующие параметры подключения:
+                                <ul>
+                                    <li><strong>URI:</strong> <code>bolt://neo4j:7687</code></li>
+                                    <li><strong>Пользователь:</strong> <code>neo4j</code></li>
+                                    <li><strong>Пароль:</strong> Пароль, который вы установили ранее.</li>
+                                </ul>
+                            </li>
+                            <li>Убедитесь, что ваше приложение может установить соединение с Neo4j.</li>
+                        </ol>
+
+                        <h4>Объяснение</h4>
+                        <ul>
+                            <li>Поскольку оба сервиса находятся в одной сети Docker, вы можете использовать имя сервиса
+                                <code>neo4j</code> в качестве хоста при подключении.</li>
+                            <li>Протокол Bolt (<code>bolt://</code>) используется для высокопроизводительного
+                                взаимодействия с Neo4j.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Подшаг 5 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Настройка постоянного хранения
+                        данных</button>
+                    <div class="sub-panel">
+                        <p>Для обеспечения сохранности данных необходимо настроить постоянное хранение.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ol>
+                            <li>В файле <code>docker-compose.yml</code> мы уже настроили монтирование локальных
+                                директорий в контейнер:
+                                <ul>
+                                    <li><code>./data:/data</code>: Хранение данных базы данных.</li>
+                                    <li><code>./logs:/logs</code>: Логи Neo4j.</li>
+                                    <li><code>./import:/import</code>: Для импорта данных.</li>
+                                    <li><code>./plugins:/plugins</code>: Плагины для Neo4j.</li>
+                                </ul>
+                            </li>
+                            <li>Убедитесь, что директории существуют и имеют правильные права доступа.</li>
+                            <div class="code-block">
+                                <pre>
+mkdir -p data logs import plugins
+                    </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                        </ol>
+
+                        <div class="info-block">
+                            <p><strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> Постоянное хранение
+                                данных гарантирует, что данные не будут потеряны при перезапуске или удалении
+                                контейнера.</p>
+                        </div>
+                    </div>
+
+                    <!-- Подшаг 6 -->
+                    <button class="sub-accordion"><i class="fas fa-chevron-right"></i> Управление контейнером
+                        Neo4j</button>
+                    <div class="sub-panel">
+                        <p>Некоторые полезные команды для управления контейнером Neo4j.</p>
+
+                        <p><strong>Действия:</strong></p>
+                        <ul>
+                            <li><strong>Остановка контейнера:</strong>
+                                <div class="code-block">
+                                    <pre>
+docker-compose down
+                        </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                            </li>
+                            <li><strong>Перезапуск контейнера:</strong>
+                                <div class="code-block">
+                                    <pre>
+docker-compose restart
+                        </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                            </li>
+                            <li><strong>Просмотр логов:</strong>
+                                <div class="code-block">
+                                    <pre>
+docker-compose logs -f
+                        </pre>
+                                    <button class="copy-button" onclick="copyCode(this)"><i
+                                            class="fas fa-copy"></i></button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Чек-лист: Установка и настройка Neo4j</h3>
+                <ul>
+                    <li>Создан и настроен файл <code>docker-compose.yml</code> для Neo4j.</li>
+                    <li>Контейнер Neo4j запущен и работает.</li>
+                    <li>Доступ к веб-интерфейсу Neo4j осуществляется через браузер.</li>
+                    <li>Ваше приложение настроено для подключения к Neo4j.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://neo4j.com/docs/" target="_blank">Официальная документация Neo4j</a></li>
+                    <li><a href="https://neo4j.com/developer/docker/" target="_blank">Neo4j в Docker</a></li>
+                    <li><a href="https://hub.docker.com/_/neo4j" target="_blank">Neo4j на Docker Hub</a></li>
+                </ul>
+            </div>
+
+            <!-- Обновляем нумерацию следующих шагов -->
+            <!-- Главный шаг 8 -->
+            <button class="accordion"><i class="fas fa-step-forward"></i> Шаг 8: Продолжение изучения Docker и
+                Neo4j</button>
+            <div class="panel">
+                <h3>Описание</h3>
+                <p>Теперь, когда вы установили Neo4j с использованием Docker, рекомендуется продолжить изучение
+                    следующих тем:</p>
+
+                <ul>
+                    <li>Изучение языка запросов Cypher для работы с графовыми данными.</li>
+                    <li>Настройка безопасности и управление пользователями в Neo4j.</li>
+                    <li>Резервное копирование и восстановление данных Neo4j.</li>
+                    <li>Мониторинг производительности Neo4j.</li>
+                    <li>Интеграция Neo4j с Kubernetes для оркестрации контейнеров.</li>
+                </ul>
+
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="https://neo4j.com/developer/cypher-query-language/" target="_blank">Изучение языка
+                            Cypher</a></li>
+                    <li><a href="https://neo4j.com/developer/kubernetes/" target="_blank">Neo4j и Kubernetes</a></li>
+                </ul>
+            </div>
+
+        </section>
+
+        <!-- Навигация между шагами -->
+        <div class="navigation">
+            <!-- Назад к предыдущему шагу по руководству -->
+            <a href="../developer/preparation.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему
+                шагу по руководству</a>
+            <!-- Следующий шаг по руководству -->
+            <a href="../developer/work_with_code.html" class="button">Следующий шаг руководства: Разработчик: Работа с
+                кодом <i class="fas fa-arrow-right"></i></a>
+            <!-- Назад к предыдущему шагу по роли -->
+            <a href="../devops/introduction.html" class="button"><i class="fas fa-arrow-left"></i> Назад к предыдущему
+                шагу по роли</a>
+            <!-- Следующий шаг по роли -->
+            <a href="kubernetes_setup.html" class="button">Следующий шаг по роли: Настройка Kubernetes <i
+                    class="fas fa-arrow-right"></i></a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 | JustUs.uz | Все права защищены</p>
+    </footer>
+
+    <script src="../js/scripts.js"></script>
+</body>
+
+</html>
