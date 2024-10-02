@@ -14,7 +14,7 @@
     <nav class="breadcrumb">
         <ul>
             <li class="breadcrumb-item"><a href="../index.html">Главная</a></li>
-            Роль: Разработчик
+            <li class="breadcrumb-item">Роль: Разработчик</li>
             <li class="breadcrumb-item"><a href="introduction.html">Введение</a></li>
             <li class="breadcrumb-item active">Подготовка среды разработки</li>
         </ul>
@@ -220,34 +220,8 @@ npm -v
                             <li>Создайте папку проекта и перейдите в неё:</li>
                             <div class="code-block">
                                 <pre>
-mkdir my-project
-cd my-project
-                                </pre>
-                                <button class="copy-button" onclick="copyCode(this)"><i
-                                        class="fas fa-copy"></i></button>
-                            </div>
-                            <li>Инициализируйте Git-репозиторий:</li>
-                            <div class="code-block">
-                                <pre>
-git init
-                                </pre>
-                                <button class="copy-button" onclick="copyCode(this)"><i
-                                        class="fas fa-copy"></i></button>
-                            </div>
-                            <li>Создайте файл <code>README.md</code> с описанием проекта.</li>
-                            <div class="code-block">
-                                <pre>
-echo "# My Project" > README.md
-                                </pre>
-                                <button class="copy-button" onclick="copyCode(this)"><i
-                                        class="fas fa-copy"></i></button>
-                            </div>
-                            <li>Создайте файл <code>.gitignore</code> и добавьте туда следующие строки:</li>
-                            <div class="code-block">
-                                <pre>
-node_modules/
-dist/
-.env
+mkdir {{PROJECT_NAME}}
+cd {{PROJECT_NAME}}
                                 </pre>
                                 <button class="copy-button" onclick="copyCode(this)"><i
                                         class="fas fa-copy"></i></button>
@@ -256,6 +230,53 @@ dist/
                             <div class="code-block">
                                 <pre>
 npm init -y
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Создайте файл <code>.gitignore</code> и добавьте туда следующие строки:</li>
+                            <div class="code-block">
+                                <pre>
+# Node modules
+node_modules/
+
+# Compiled output
+dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+
+# Environment variables
+.env
+                                </pre>
+                            </div>
+                            <p><strong>Объяснение:</strong> Файл <code>.gitignore</code> указывает Git, какие файлы и директории не следует добавлять в репозиторий. Это помогает избежать загрузки ненужных файлов (например, <code>node_modules</code>) в удаленный репозиторий.</p>
+                            <li>Инициализируйте Git-репозиторий:</li>
+                            <div class="code-block">
+                                <pre>
+git init
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i
+                                        class="fas fa-copy"></i></button>
+                            </div>
+                            <li>Настройте ваше имя пользователя и email для Git:</li>
+                            <div class="code-block">
+                                <pre>
+git config --global user.name "Ваше Имя"
+git config --global user.email "you@example.com"
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                            </div>
+                            <p><strong>Примечание:</strong> Эти данные будут использоваться для записи информации о том, кто сделал коммит. Если вы хотите установить эти данные только для текущего репозитория, уберите опцию <code>--global</code>.</p>
+                            <li>Создайте файл <code>README.md</code> с описанием проекта.</li>
+                            <div class="code-block">
+                                <pre>
+echo "# {{PROJECT_NAME}}" > README.md
                                 </pre>
                                 <button class="copy-button" onclick="copyCode(this)"><i
                                         class="fas fa-copy"></i></button>
@@ -281,7 +302,7 @@ mkdir public/images
                             <p>Структура проекта:</p>
                             <div class="code-block">
                                 <pre>
-my-project/
+{{PROJECT_NAME}}/
 ├── docker/
 ├── kubernetes/
 ├── src/
@@ -307,6 +328,20 @@ git commit -m "Initial commit"
                                 <button class="copy-button" onclick="copyCode(this)"><i
                                         class="fas fa-copy"></i></button>
                             </div>
+                            <p><strong>Примечание:</strong> Если при выполнении команды <code>git add .</code> вы получаете предупреждение:</p>
+                            <div class="code-block">
+                                <pre>
+warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
+                                </pre>
+                            </div>
+                            <p>Это предупреждение связано с различиями в форматах переноса строк между Unix (LF) и Windows (CRLF). Чтобы настроить Git для автоматической обработки переносов строк, выполните команду:</p>
+                            <div class="code-block">
+                                <pre>
+git config --global core.autocrlf true
+                                </pre>
+                                <button class="copy-button" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                            </div>
+                            <p>После этого предупреждение должно исчезнуть.</p>
                         </ol>
                     </div>
 
@@ -318,7 +353,7 @@ git commit -m "Initial commit"
                         <ol>
                             <li>Перейдите на GitHub и войдите в свой аккаунт.</li>
                             <li>Нажмите на кнопку <strong>New</strong> для создания нового репозитория.</li>
-                            <li>Введите имя репозитория (например, <code>my-project</code>), добавьте описание и
+                            <li>Введите имя репозитория (например, <code>{{PROJECT_NAME}}</code>), добавьте описание и
                                 установите его как <strong>Private</strong> или <strong>Public</strong>.</li>
                             <li>Не создавайте <code>README.md</code>, <code>.gitignore</code> или лицензию — они у нас
                                 уже есть.</li>
@@ -327,7 +362,7 @@ git commit -m "Initial commit"
                             </li>
                             <div class="code-block">
                                 <pre>
-git remote add origin https://github.com/yourusername/my-project.git
+git remote add origin https://github.com/yourusername/{{PROJECT_NAME}}.git
 git branch -M main
 git push -u origin main
                                 </pre>
