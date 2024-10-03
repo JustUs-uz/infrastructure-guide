@@ -242,6 +242,7 @@ node_modules/
 
 # Compiled output
 dist/
+build/
 
 # Logs
 logs/
@@ -250,12 +251,39 @@ npm-debug.log*
 
 # OS files
 .DS_Store
+Thumbs.db
 
 # Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.idea/
+.vscode/
+
+# Miscellaneous
+*.sublime-project
+*.sublime-workspace
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Coverage directory used by testing tools
+coverage/
+
+# Temporary files
+tmp/
+temp/
+
+# Build directories
+docker/
+kubernetes/
                                 </pre>
                             </div>
-                            <p><strong>Объяснение:</strong> Файл <code>.gitignore</code> указывает Git, какие файлы и директории не следует добавлять в репозиторий. Это помогает избежать загрузки ненужных файлов (например, <code>node_modules</code>) в удаленный репозиторий.</p>
+                            <p><strong>Объяснение:</strong> Этот файл <code>.gitignore</code> отражает структуру вашего проекта и исключает директории и файлы, которые не нужно добавлять в репозиторий, включая каталоги <code>node_modules</code>, скомпилированные файлы, файлы конфигурации сред, временные файлы и директории сборки.</p>
                             <li>Инициализируйте Git-репозиторий:</li>
                             <div class="code-block">
                                 <pre>
@@ -291,6 +319,7 @@ mkdir src/client
 mkdir src/server
 mkdir src/server/routes
 mkdir src/server/models
+mkdir src/server/controllers
 mkdir public
 mkdir public/css
 mkdir public/js
@@ -309,7 +338,8 @@ mkdir public/images
 │   ├── client/
 │   ├── server/
 │       ├── routes/
-│       └── models/
+│       ├── models/
+│       └── controllers/
 ├── public/
 │   ├── css/
 │   ├── js/
@@ -424,6 +454,7 @@ npx tsc --init
                 <h3>Чек-лист: Проверка инициализации проекта</h3>
                 <ul>
                     <li>Структура проекта создана согласно схеме.</li>
+                    <li>Файл <code>.gitignore</code> содержит корректные исключения, соответствующие структуре проекта.</li>
                     <li>Проект инициализирован как Git-репозиторий.</li>
                     <li>Проект загружен на GitHub.</li>
                     <li>Установлены все необходимые пакеты и инструменты.</li>
